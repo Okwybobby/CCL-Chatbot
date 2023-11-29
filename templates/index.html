@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+        content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+        href="/static/css/main.css">
+    <link rel="shortcut icon"
+        href="https://chat.openai.com/favicon.ico"
+        type="image/x-icon">
+    <style>
+        .right2 {
+            display: none;
+        }
+
+        .right_proposal {
+            display: none;
+        }
+
+        .custom-label {
+            margin-right: 10px;
+            /* Adjust the value to your desired spacing */
+        }
+    </style>
+
+
+    <title>New chat</title>
+</head>
+
+<body class="bg-chatblack-50">
+
+    <div class="flex h-[80vh] text-white mx-auto">
+        <div class="left bg-[#202123] w-12/12">
+
+            <button
+                class="w-[20%] py-2 m-2 px-10 space-x-2 border-white border rounded-md flex mx-7 justify-start items-center hover:opacity-70">
+                <svg stroke="currentColor"
+                    fill="none"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <line x1="12"
+                        y1="5"
+                        x2="12"
+                        y2="19"></line>
+                    <line x1="5"
+                        y1="12"
+                        x2="19"
+                        y2="12"></line>
+                </svg>
+                <span>New Chat</span>
+            </button>
+            <div class="text-xs m-4 mx-8 text-gray-400">Today</div>
+            <div class="chats flex flex-col justify-center items-center space-y-2">
+
+
+                {% for chat in myChats %}
+                <div
+                    class="chat space-x-2 opacity-80 w-[90%] px-5 py-2 rounded-md bg-gray-600 cursor-pointer flex justify-start items-center">
+                    <svg stroke="currentColor"
+                        fill="none"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="text-sm">{{chat.question}}</span>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <div class="right1 w-10/12 flex justify-start items-center flex-col">
+            <div class="text-center w-full text-3xl font-bold my-10">
+                CCL ChatBot
+            </div>
+            <div class="itemsrow flex py-4 w-[43w] justify-around">
+                <div class="examples flex flex-col justify-start items-center">
+                    <svg stroke="currentColor"
+                        fill="none"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-2 w-4"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12"
+                            cy="12"
+                            r="5"></circle>
+                        <line x1="12"
+                            y1="1"
+                            x2="12"
+                            y2="3"></line>
+                        <line x1="12"
+                            y1="21"
+                            x2="12"
+                            y2="23"></line>
+                        <line x1="4.22"
+                            y1="4.22"
+                            x2="5.64"
+                            y2="5.64"></line>
+                        <line x1="18.36"
+                            y1="18.36"
+                            x2="19.78"
+                            y2="19.78"></line>
+                        <line x1="1"
+                            y1="12"
+                            x2="3"
+                            y2="12"></line>
+                        <line x1="21"
+                            y1="12"
+                            x2="23"
+                            y2="12"></line>
+                        <line x1="4.22"
+                            y1="19.78"
+                            x2="5.64"
+                            y2="18.36"></line>
+                        <line x1="18.36"
+                            y1="5.64"
+                            x2="19.78"
+                            y2="4.22"></line>
+                    </svg>
+                    <div class="py-4 text-sm">Proposals</div>
+                    <button id="proposal"
+                        class="bg-gray-600 min-w-max text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">Write
+                        Proposal →</button>
+
+                    <!-- <button class="bg-gray-600 min-w-max text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">"Develop Letter" →</button>
+                    <button class="bg-gray-600 min-w-max text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">"How
+                        can I respond to a query email?" →</button> -->
+                </div>
+                <div class="cap flex flex-col justify-start items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                        class="h-2 w-4">
+                        <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path>
+                    </svg>
+                    <div class="py-4 text-sm">Letters</div>
+                    <!-- <button
+                        class="bg-gray-600 w-fit text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">Remembers
+                        what user said earlier in the conversation</button> -->
+                    <!-- <button
+                        class="bg-gray-600 w-fit text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">Allows
+                        user to provide follow-up corrections</button>
+                    <button
+                        class="bg-gray-600 w-fit text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">Trained
+                        to decline inappropriate requests</button> -->
+                    <button
+                        class="bg-gray-600 min-w-max text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">"Develop
+                        Letter" →</button>
+                </div>
+
+                <div class="lim flex flex-col justify-start items-center">
+                    <svg stroke="currentColor"
+                        fill="none"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-2 w-4"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                        </path>
+                        <line x1="12"
+                            y1="9"
+                            x2="12"
+                            y2="13"></line>
+                        <line x1="12"
+                            y1="17"
+                            x2="12.01"
+                            y2="17"></line>
+                    </svg>
+                    <div class="py-4 text-sm">NDAs</div>
+                    <!-- <button class="bg-gray-600 w-fit text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md"> May
+                        occasionally generate incorrect information</button>
+                    <button class="bg-gray-600 w-fit text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">May
+                        occasionally produce harmful instructions or biased content</button>
+                    <button
+                        class="bg-gray-600 w-fit text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">Limited
+                        knowledge of world and events outside CypherCrescent Activites</button> -->
+                    <button
+                        class="bg-gray-600 min-w-max text-xs hover:bg-gray-700 py-4 px-4 mx-4  my-2 rounded-md">Develop
+                        NDA →</button>
+                </div>
+            </div>
+
+
+
+            <div class="pt-50 flex justify-end w-full mt-52"> </div>
+
+
+
+            <div class="buttonsvg pl-16 w-full flex">
+                <div class="w-full p-4 bg-gray-600 rounded-md resize-y focus:outline-none"
+                    contenteditable="true"
+                    placeholder="Send a Message"
+                    id="questionInput"
+                    onkeydown="handleKeyDown(event)"
+                    ></div>
+                <button id="sendButton"
+                    class="relative -left-20 pl-10">
+                    <svg stroke="currentColor"
+                        fill="none"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4 mr-1"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="22"
+                            y1="2"
+                            x2="11"
+                            y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+
+
+            <!-- <div class="input w-full text-center my-24 max-w-xl mx-3.5 flex items-center justify-center flex-col">
+                <div class="buttonsvg pl-16 w-full flex">
+                    <textarea class="w-full p-4 bg-gray-600 rounded-md mr-96 ml-96 overflow-auto max-h-40"
+                        placeholder="Send a Message"
+                        type="text"
+                        name="text"
+                        id="questionInput">
+
+                    <button id="sendButton"
+                        class="relative -left-20 pl-10">
+                        <svg stroke="currentColor"
+                            fill="none"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-4 w-4 mr-1"
+                            height="1em"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="22"
+                                y1="2"
+                                x2="11"
+                                y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="text-xs py-2 pr-10 opacity-70">CCL Chatbot Preview. CCL Chatbot may produce inaccurate
+                    information about people, places, or facts.<a class="underline"
+                        href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes"> CCLBot</a></div>
+            </div> -->
+        </div>
+
+        <!-- <div class="right2 w-10/12 flex flex-col items-center h-fit"> -->
+        <div class="right2 w-10/12 flex justify-start items-center flex-col pl-96">
+            <!-- <div class="box1 m-auto py-7 px-40 flex justify-start w-[35vw] items-center space-x-6">
+                <img class="w-9 ml-96"
+                    src="static/Images/user.png"
+                    alt="">
+                <div id="question2">Loading...</div>
+            </div>
+            <div class="box2 bg-gray-600 py-7 px-40 flex justify-start w-max items-center">
+                <div class="box w-[35vw] flex justify-start space-x-6">
+                    <img class="w-9 h-9 ml-96"
+                        src="https://chat.openai.com/favicon.ico"
+                        alt="">
+
+                    
+                    <div class="flex space-y-4 flex-col">
+                        <div id="question1">Loading...</div>
+                        <div id="solution">Loading...</div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- <div class="input pt-80 w-max text-center mt-52 flex items-center justify-center flex-col"> -->
+
+            <div id="chatbox_space" class="pt-50 flex justify-end w-full mt-52"> </div>
+            
+
+            <div id="container">
+
+            </div>
+
+
+
+
+
+
+            <div id="chatbox" class="buttonsvg pl-16 w-full flex">
+                <div class="w-full p-4 bg-gray-600 rounded-md resize-y focus:outline-none"
+                    contenteditable="true"
+                    placeholder="Send a Message"
+                    id="questionInput2"
+                    onkeydown="handleKeyDown2(event)"
+                    ></div>
+                <button id="sendButton2"
+                    class="relative -left-20 pl-10">
+                    <svg stroke="currentColor"
+                        fill="none"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4 mr-1"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="22"
+                            y1="2"
+                            x2="11"
+                            y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+
+
+
+
+
+
+
+
+            <!-- <div id="chatbox"
+                class="input pt-50 w-full text-center mt-52 flex items-center justify-center flex-col">
+                <div class="buttonsvg pl-16 w-full flex">
+                    <textarea class="w-full p-4 bg-gray-600 rounded-md overflow-auto max-h-40"
+                        placeholder="Send a Message"
+                        type="text"
+                        name="text"
+                        id="questionInput2">
+
+                    <button id="sendButton2"
+                        class="relative -left-20 pl-10">
+                        <svg stroke="currentColor"
+                            fill="none"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-4 w-4 mr-1"
+                            height="1em"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="22"
+                                y1="2"
+                                x2="11"
+                                y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="text-xs py-2 pr-10 opacity-70">CCL Chatbot Preview. CCL Chatbot may produce inaccurate
+                    information about people, places, or facts.<a class="underline"
+                        href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes"> CCLBot</a>
+                </div>
+            </div> -->
+
+        </div>
+
+
+
+        <div class="right_proposal w-10/12 flex justify-start items-center flex-col pl-96">
+            <div class="text-center w-full text-3xl font-bold my-10">
+                CCL ChatBot
+            </div>
+
+            <!-- <div class="text-center w-full text-3xl font-medium my-10">
+               
+            </div> -->
+
+            <!-- <div class="itemsrow flex py-2 w-full justify-around"> -->
+            <div class="itemsrow flex py-2 w-full justify-center px-32">
+                <!-- <div class="input pt-50 w-full text-center flex items-center justify-center flex-col"> -->
+                <div class="flex items-center mb-4">
+                    <input id="default-checkbox"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="default-checkbox"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Select All</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="about_cyphercrescent"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="about_cyphercrescent"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">About CyperCrescent</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="our_team"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="our_team"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Our Team</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="our_commitment"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="our_commitment"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Our Commitment</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="benefits"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="benefits"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Benefits</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="executive_summary"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="executive_summary"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Executive Summary</label>
+                </div>
+
+
+            </div>
+
+            <div class="itemsrow flex py-2 w-full justify-center px-32">
+
+                <div class="flex items-center">
+                    <input id="our_clients"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="our_clients"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Our Clients</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="overview_template"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="overview_template"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Overview</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="introduction"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="introduction"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Introduction</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="problems"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="problems"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Problems</label>
+                </div>
+
+
+                <div class="flex items-center">
+                    <input id="proposed_solution"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="proposed_solution"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Proposed Solution</label>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="importance"
+                        type="checkbox"
+                        value=""
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="importance"
+                        class="custom-label"
+                        class="
+                        ml-2
+                        mr-2
+                        text-sm
+                        font-medium
+                        text-gray-900
+                        dark:text-gray-300">Importance/ Business value</label>
+                </div>
+
+            </div>
+
+
+            <div id="container_proposal">
+
+            </div>
+
+            <div id="next_proposal"
+                class="pt-50 flex justify-end w-full mt-52">
+                <div class="flex pr-5 float: right">
+                    <button id="refreshButton"
+                        class="mr-36">
+                        <svg width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="icon-md">
+                            <path fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M4.5 2.5C5.05228 2.5 5.5 2.94772 5.5 3.5V5.07196C7.19872 3.47759 9.48483 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C7.1307 21.5 3.11828 17.8375 2.565 13.1164C2.50071 12.5679 2.89327 12.0711 3.4418 12.0068C3.99033 11.9425 4.48712 12.3351 4.5514 12.8836C4.98798 16.6089 8.15708 19.5 12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.7796 4.5 7.7836 5.46469 6.40954 7H9C9.55228 7 10 7.44772 10 8C10 8.55228 9.55228 9 9 9H4.5C3.96064 9 3.52101 8.57299 3.50073 8.03859C3.49983 8.01771 3.49958 7.99677 3.5 7.9758V3.5C3.5 2.94772 3.94771 2.5 4.5 2.5Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </button>
+
+                    <button id="nextButton">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            class="h-6 w-6">
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+
+
+
+            <div id="chatbox_proposal" class="buttonsvg pl-16 w-full flex">
+                <div class="w-full p-4 bg-gray-600 rounded-md resize-y focus:outline-none"
+                    contenteditable="true"
+                    placeholder="Send a Message"
+                    id="questionInput_proposal"
+                    onkeydown="handleKeyDown_proposal(event)"></div>
+                <button id="sendButton_proposal"
+                    class="relative -left-20 pl-10">
+                    <svg stroke="currentColor"
+                        fill="none"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4 mr-1"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <line x1="22"
+                            y1="2"
+                            x2="11"
+                            y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+
+
+
+
+
+
+
+
+            <!-- <div id="chatbox_proposal"
+                class="input w-full text-center flex items-center justify-center flex-col">
+
+                <div class="buttonsvg pl-16 w-full flex">
+                    <textarea class="w-full p-4 bg-gray-600 rounded-md overflow-auto max-h-40"
+                        placeholder="Send a Message"
+                        type="text"
+                        name="text"
+                        id="questionInput_proposal">
+
+                    <button id="sendButton_proposal"
+                        class="relative -left-20 pl-10">
+                        <svg stroke="currentColor"
+                            fill="none"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-4 w-4 mr-1"
+                            height="1em"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <line x1="22"
+                                y1="2"
+                                x2="11"
+                                y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="text-xs py-2 pr-10 opacity-70">CCL Chatbot Preview. CCL Chatbot may produce inaccurate
+                    information about people, places, or facts.<a class="underline"
+                        href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes"> CCLBot</a>
+                </div>
+            </div> -->
+
+        </div>
+
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- <script src="/static/js/script.js"></script> -->
+</body>
+
+</html>

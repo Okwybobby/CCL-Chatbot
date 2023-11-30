@@ -31,7 +31,7 @@ const handleKeyDown = async (event) => {
   if (event.ctrlKey && event.key === 'Enter') {
 
 
-    
+
     questionInput = document.getElementById("questionInput").innerText;
     console.log("Clicked sendButton!!!", questionInput)
 
@@ -65,7 +65,7 @@ const handleKeyDown = async (event) => {
       const box1 = document.createElement('div');
       box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
       box1.innerHTML = `
-      <img class="w-9 ml-96" src="static/Images/user.png" alt="">
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${res.question}</span></div>
     `;
 
@@ -74,7 +74,7 @@ const handleKeyDown = async (event) => {
       box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
       box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-96" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
@@ -105,7 +105,7 @@ const handleKeyDown2 = async (event) => {
   if (event.ctrlKey && event.key === 'Enter') {
 
 
-    
+
     questionInput = document.getElementById("questionInput2").innerText;
     console.log("Clicked sendButton!!!", questionInput)
 
@@ -139,7 +139,7 @@ const handleKeyDown2 = async (event) => {
       const box1 = document.createElement('div');
       box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
       box1.innerHTML = `
-      <img class="w-9 ml-96" src="static/Images/user.png" alt="">
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${res.question}</span></div>
     `;
 
@@ -148,7 +148,7 @@ const handleKeyDown2 = async (event) => {
       box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
       box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-96" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
@@ -202,7 +202,7 @@ sendButton.addEventListener("click", async () => {
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-      <img class="w-9 ml-96" src="static/Images/user.png" alt="">
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${res.question}</span></div>
     `;
 
@@ -211,7 +211,7 @@ sendButton.addEventListener("click", async () => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-96" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
@@ -245,6 +245,7 @@ sendButton.addEventListener("click", async () => {
 })
 
 
+
 sendButton2.addEventListener("click", async () => {
   console.log("Clicked sendButton!!!")
   questionInput = document.getElementById("questionInput2").value;
@@ -271,7 +272,7 @@ sendButton2.addEventListener("click", async () => {
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-      <img class="w-9 ml-96" src="static/Images/user.png" alt="">
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${res.question}</span></div>
     `;
 
@@ -280,7 +281,7 @@ sendButton2.addEventListener("click", async () => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-96" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
@@ -331,7 +332,7 @@ proposal.addEventListener("click", async (e) => {
   const box1 = document.createElement('div');
   box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
   box1.innerHTML = `
-     <img class="w-9 ml-96" src="static/Images/user.png" alt="">
+     <img class="w-9 ml-4" src="static/Images/user.png" alt="">
      <div id="question2"><span class="text-sm">Please enter a brief description of the proposal, highlighting the problems you want to solve, as well as the benefits of your solution.</span></div>
    `;
 
@@ -344,6 +345,62 @@ proposal.addEventListener("click", async (e) => {
 
 
 })
+
+
+document.getElementById('default-checkbox').addEventListener('change', function () {
+  var checkboxes = document.querySelectorAll('.itemsrow input[type="checkbox"]');
+  checkboxes.forEach(function (checkbox) {
+    checkbox.checked = document.getElementById('default-checkbox').checked;
+  });
+});
+
+
+
+letter.addEventListener("click", async () => {
+  console.log("Clicked Letter!!!")
+  // questionInput = document.getElementById("questionInput").value;
+  document.getElementById("questionInput").value = "";
+  document.querySelector(".right2").style.display = "none"
+  document.querySelector(".right_letter").style.display = "block"
+  document.querySelector(".right1").style.display = "none"
+  document.querySelector(".right_proposal").style.display = "none"
+
+  // question1.innerHTML = questionInput;
+  // question2.innerHTML = questionInput;
+
+  // Get the answer and populate it! 
+  // let allresults = await postData("/api", { "question": questionInput })
+
+  // Get the container element
+  const container = document.getElementById('container_letter');
+
+
+  // Loop through 'allresults' array and create instances dynamically
+  // allresults.forEach(res => {
+
+  // console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+  // Please enter a brief description of what the letter is about
+
+
+  // Create the first instance
+  const box1 = document.createElement('div');
+  box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+  box1.innerHTML = `
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <div id="question2"><span class="text-sm">Please enter a brief description of the letter</span></div>
+    `;
+
+
+  container.appendChild(box1);
+
+  // Get the existing element with id 'chatbox'
+  const chatbox = document.getElementById('next_letter');
+
+  chatbox.parentNode.insertBefore(container, chatbox);
+
+
+})
+
 
 
 document.getElementById('default-checkbox').addEventListener('change', function () {
@@ -386,7 +443,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-      <img class="w-9 ml-96" src="static/Images/user.png" alt="">
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${res.question}</span></div>
     `;
 
@@ -397,7 +454,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     if (isFirstIteration) {
       box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-96" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
@@ -408,7 +465,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     } else {
       box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <div class="w-9 h-9 ml-96">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div class="flex space-y-4 flex-col space-x-96 ">          
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
         </div>

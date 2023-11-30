@@ -8,6 +8,8 @@
 //   return response.json();
 // }
 
+
+
 async function postData(url = "", data = {}) {
   try {
     const response = await fetch(url, {
@@ -38,6 +40,10 @@ const handleKeyDown = async (event) => {
     document.getElementById("questionInput").innerText = "";
     document.querySelector(".right2").style.display = "block"
     document.querySelector(".right1").style.display = "none"
+  
+    document.querySelector(".right_letter").style.display = "none"
+    document.querySelector(".right_nda").style.display = "none"    
+    document.querySelector(".right_proposal").style.display = "none"
 
     // question1.innerHTML = questionInput;
     // question2.innerHTML = questionInput;
@@ -175,13 +181,91 @@ const handleKeyDown2 = async (event) => {
 };
 
 
+const handleKeyDown_letter = async (event) => {
+  if (event.ctrlKey && event.key === 'Enter') {
+
+
+
+    questionInput = document.getElementById("questionInput_letter").innerText;
+    console.log("Clicked sendButton!!!", questionInput)
+
+    document.getElementById("questionInput_letter").innerText = "";
+    // document.querySelector(".right2").style.display = "block"
+    // document.querySelector(".right1").style.display = "none"
+
+    // question1.innerHTML = questionInput;
+    // question2.innerHTML = questionInput;
+
+    // Get the answer and populate it! 
+    let allresults = await postData("/letter", { "question": questionInput })
+
+    // Log allresults to understand its structure
+    console.log("API Response:", allresults)
+
+    console.dir(allresults)
+
+    // Get the container element
+    const container = document.getElementById('container_letter');
+
+
+    // Loop through 'allresults' array and create instances dynamically
+    allresults.forEach(res => {
+
+      console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+
+      // Create the first instance
+      const box1 = document.createElement('div');
+      box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+      box1.innerHTML = `
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <div id="question2"><span class="text-sm">${res.question}</span></div>
+    `;
+
+      // Create the second instance
+      let box2 = document.createElement('div');
+      box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+      box2.innerHTML = `
+      <div class="box w-[35vw] flex justify-start space-x-6">
+        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+        <div class="flex space-y-4 flex-col">
+          <div id="question1"><span class="text-sm">CCL Bot</span></div>
+          <div id="solution"><span class="text-sm">${res.answer}</span></div>
+        </div>
+      </div>
+    `;
+
+      // Append both instances to the container
+      container.appendChild(box1);
+      container.appendChild(box2);
+    });
+
+
+    // Get the existing element with id 'chatbox'
+    const chatbox = document.getElementById('container_letter');
+
+    // Insert the container above the 'chatbox' element
+    chatbox.parentNode.insertBefore(container, chatbox);
+
+    // await new Promise(resolve => setTimeout(resolve, 1000));
+    // Prevent the default behavior (new line in contenteditable)
+    event.preventDefault();
+  }
+};
+
+newChat.addEventListener("click", async () => {
+  location.reload();
+
+})
 
 sendButton.addEventListener("click", async () => {
   console.log("Clicked sendButton!!!")
   questionInput = document.getElementById("questionInput").value;
   document.getElementById("questionInput").value = "";
   document.querySelector(".right2").style.display = "block"
-  document.querySelector(".right1").style.display = "none"
+  document.querySelector(".right1").style.display = "none"  
+  document.querySelector(".right_letter").style.display = "none"
+  document.querySelector(".right_nda").style.display = "none"
+  document.querySelector(".right_proposal").style.display = "none"
 
   // question1.innerHTML = questionInput;
   // question2.innerHTML = questionInput;
@@ -251,7 +335,11 @@ sendButton2.addEventListener("click", async () => {
   questionInput = document.getElementById("questionInput2").value;
   document.getElementById("questionInput2").value = "";
   document.querySelector(".right2").style.display = "block"
-  document.querySelector(".right1").style.display = "none"
+  document.querySelector(".right1").style.display = "none"  
+  
+  document.querySelector(".right_letter").style.display = "none"
+  document.querySelector(".right_nda").style.display = "none"  
+  document.querySelector(".right_proposal").style.display = "none"
 
   // question1.innerHTML = questionInput;
   // question2.innerHTML = questionInput;
@@ -364,6 +452,7 @@ letter.addEventListener("click", async () => {
   document.querySelector(".right_letter").style.display = "block"
   document.querySelector(".right1").style.display = "none"
   document.querySelector(".right_proposal").style.display = "none"
+  document.querySelector(".right_nda").style.display = "none"  
 
   // question1.innerHTML = questionInput;
   // question2.innerHTML = questionInput;
@@ -402,6 +491,51 @@ letter.addEventListener("click", async () => {
 })
 
 
+nda.addEventListener("click", async () => {
+  console.log("Clicked nda!!!")
+  // questionInput = document.getElementById("questionInput").value;
+  document.getElementById("questionInput").value = "";
+  document.querySelector(".right2").style.display = "none"
+  document.querySelector(".right_letter").style.display = "none"
+  document.querySelector(".right_nda").style.display = "block"
+  document.querySelector(".right1").style.display = "none"
+  document.querySelector(".right_proposal").style.display = "none"
+
+  // question1.innerHTML = questionInput;
+  // question2.innerHTML = questionInput;
+
+  // Get the answer and populate it! 
+  // let allresults = await postData("/api", { "question": questionInput })
+
+  // Get the container element
+  const container = document.getElementById('container_nda');
+
+
+  // Loop through 'allresults' array and create instances dynamically
+  // allresults.forEach(res => {
+
+  // console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+  // Please enter a brief description of what the nda is about
+
+
+  // Create the first instance
+  const box1 = document.createElement('div');
+  box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+  box1.innerHTML = `
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <div id="question2"><span class="text-sm">Please enter a brief description of the nda</span></div>
+    `;
+
+
+  container.appendChild(box1);
+
+  // Get the existing element with id 'chatbox'
+  const chatbox = document.getElementById('next_nda');
+
+  chatbox.parentNode.insertBefore(container, chatbox);
+
+
+})
 
 document.getElementById('default-checkbox').addEventListener('change', function () {
   var checkboxes = document.querySelectorAll('.itemsrow input[type="checkbox"]');
@@ -450,6 +584,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     // Create the second instance
     const box2 = document.createElement('div');
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+     
 
     if (isFirstIteration) {
       box2.innerHTML = `

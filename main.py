@@ -1,3 +1,6 @@
+
+import markdown
+
 import requests
 from bson import ObjectId
 from flask import Flask, render_template, jsonify, request, session
@@ -37,6 +40,7 @@ def home():
 
     # Initialize an empty list in the session if it doesn't exist
     session.setdefault('answer_data_list', [])
+    session.setdefault('answer_letter', [])
     session.setdefault('question_data_list', [])
     
     if 'chat_session' not in session:
@@ -99,11 +103,13 @@ def qa():
             # Append the values to the session list
 
             session['answer_data_list'].append(data)
+            
+           
             # return jsonify(data)
 
             # Remove _id field from all documents in the session list
             for item in session['answer_data_list']:
-                item.pop('_id', None)
+                item.pop('_id', None)            
 
             results = session['answer_data_list']
             print('openai RETURED: ')
@@ -149,7 +155,7 @@ def getnext():
                         print("chat_box ......", chat_box)
 
                         data = {"session": str(session['chat_session']), "question": "",
-                        "answer": chat_box}
+                        "answer": markdown.markdown(chat_box)}
                         
                         preview_sections.append(data)
 
@@ -171,6 +177,59 @@ def getnext():
     # data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
     return jsonify(preview_sections)
 # @app.route('/call_python_function', methods=["GET", "POST"])
+
+
+
+@app.route("/letter", methods=["GET", "POST"])
+def qletter():
+    print("HEEEELLLLLLOOOOOO")
+    if request.method == "POST":
+        print(request.json)
+        question = request.json.get("question")
+
+        chat = mongo.db.chats.find_one({"question": question})
+        print(chat)
+        if chat:            
+            # Exclude _id field from the retrieved chat document
+            chat.pop('_id', None)
+            data = {"session": session['chat_session'], "question": question, "answer": f"{chat['answer']}"}
+
+            return jsonify(data)
+        else:
+            response = openai.Completion.create(
+                model="text-davinci-003",
+                prompt=question,
+                temperature=0.7,
+                max_tokens=256,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
+            )
+            print(response)
+
+            data = {"session": str(session['chat_session']), "question": question,
+                    "answer": response["choices"][0]["text"]}
+            # mongo.db.chats.insert_one({"question": question, "answer": response["choices"][0]["text"]})
+            mongo.db.chats.insert_one(data)
+
+            # Append the values to the session list
+
+            session['answer_letter'].append(data)
+            # return jsonify(data)
+
+            # Remove _id field from all documents in the session list
+            for item in session['answer_letter']:
+                item.pop('_id', None)
+
+            results = session['answer_letter']
+            print('openai RETURED: ')
+            print(results)
+            print(session)
+            # print(session['answer_data_list'])
+            return jsonify(results)
+    data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
+
+    return jsonify(data)
 
 
 # @app.route("/next", methods=["GET", "POST"])

@@ -9,6 +9,24 @@
 // }
 
 
+// Declare questions globally
+const nda_questions = [
+  "What is the name of Client organisation?",
+  "What is the Client's corporate address?",
+  "What date was this agreement made?",
+  "What is the client's service description.",
+  "What is the client's email?"
+];
+
+
+
+// Retrieve string array from localStorage or default to an empty array
+let nda_answers = JSON.parse(localStorage.getItem('nda_answers')) || [];
+
+
+// Retrieve nda_index from localStorage or default to 0
+let nda_index = parseInt(localStorage.getItem('nda_index')) || 0;
+
 
 async function postData(url = "", data = {}) {
   try {
@@ -40,9 +58,9 @@ const handleKeyDown = async (event) => {
     document.getElementById("questionInput").innerText = "";
     document.querySelector(".right2").style.display = "block"
     document.querySelector(".right1").style.display = "none"
-  
+
     document.querySelector(".right_letter").style.display = "none"
-    document.querySelector(".right_nda").style.display = "none"    
+    document.querySelector(".right_nda").style.display = "none"
     document.querySelector(".right_proposal").style.display = "none"
 
     // question1.innerHTML = questionInput;
@@ -252,6 +270,108 @@ const handleKeyDown_letter = async (event) => {
   }
 };
 
+
+const handleKeyDown_nda = async (event) => {
+  if (event.ctrlKey && event.key === 'Enter') {
+
+    questionInput = document.getElementById("questionInput_nda").innerText;
+    console.log("Clicked sendButton!!!", questionInput)
+
+    document.getElementById("questionInput_nda").innerText = "";
+
+    // Get the answer and populate it! 
+    let allresults = await postData("/nda", { "question": questionInput })
+
+    // Log allresults to understand its structure
+    console.log("API Response:", allresults)
+
+    console.dir(allresults)
+
+    if (allresults == '') {
+
+      // Add a new string to the array
+      nda_answers.push("New String");
+
+      // Save the updated array back to localStorage
+      localStorage.setItem('nda_answers', JSON.stringify(nda_answers));
+
+
+    } else {
+
+      // let nda_answers = JSON.parse(localStorage.getItem('myStringArray')) || [];
+
+
+      // Get the container element
+      // const container = document.getElementById('container_nda');
+
+
+      // Create the second instance
+      let box2 = document.createElement('div');
+      box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+      box2.innerHTML = `
+       <div class="box w-[35vw] flex justify-start space-x-6">
+         <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+         <div class="flex space-y-4 flex-col">
+           <div id="question1"><span class="text-sm">CCL Bot</span></div>
+           <div id="solution"><span class="text-sm">${allresults}</span></div>
+         </div>
+       </div>
+     `;
+
+      // Append both instances to the container
+      // container.appendChild(box1);
+      container.appendChild(box2);
+    }
+
+
+
+
+    // Loop through 'allresults' array and create instances dynamically
+    // allresults.forEach(res => {
+
+    //   console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+
+    //   // Create the first instance
+    //   const box1 = document.createElement('div');
+    //   box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+    //   box1.innerHTML = `
+    //   <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+    //   <div id="question2"><span class="text-sm">${res.question}</span></div>
+    // `;
+
+    //   // Create the second instance
+    //   let box2 = document.createElement('div');
+    //   box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+    //   box2.innerHTML = `
+    //   <div class="box w-[35vw] flex justify-start space-x-6">
+    //     <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+    //     <div class="flex space-y-4 flex-col">
+    //       <div id="question1"><span class="text-sm">CCL Bot</span></div>
+    //       <div id="solution"><span class="text-sm">${res.answer}</span></div>
+    //     </div>
+    //   </div>
+    // `;
+
+    //   // Append both instances to the container
+    //   container.appendChild(box1);
+    //   container.appendChild(box2);
+    // });
+
+
+    // Get the existing element with id 'chatbox'
+    const chatbox = document.getElementById('container_nda');
+
+    // Insert the container above the 'chatbox' element
+    chatbox.parentNode.insertBefore(container, chatbox);
+
+    // await new Promise(resolve => setTimeout(resolve, 1000));
+    // Prevent the default behavior (new line in contenteditable)
+    event.preventDefault();
+  }
+};
+
+
+
 newChat.addEventListener("click", async () => {
   location.reload();
 
@@ -262,7 +382,7 @@ sendButton.addEventListener("click", async () => {
   questionInput = document.getElementById("questionInput").value;
   document.getElementById("questionInput").value = "";
   document.querySelector(".right2").style.display = "block"
-  document.querySelector(".right1").style.display = "none"  
+  document.querySelector(".right1").style.display = "none"
   document.querySelector(".right_letter").style.display = "none"
   document.querySelector(".right_nda").style.display = "none"
   document.querySelector(".right_proposal").style.display = "none"
@@ -335,10 +455,10 @@ sendButton2.addEventListener("click", async () => {
   questionInput = document.getElementById("questionInput2").value;
   document.getElementById("questionInput2").value = "";
   document.querySelector(".right2").style.display = "block"
-  document.querySelector(".right1").style.display = "none"  
-  
+  document.querySelector(".right1").style.display = "none"
+
   document.querySelector(".right_letter").style.display = "none"
-  document.querySelector(".right_nda").style.display = "none"  
+  document.querySelector(".right_nda").style.display = "none"
   document.querySelector(".right_proposal").style.display = "none"
 
   // question1.innerHTML = questionInput;
@@ -452,7 +572,7 @@ letter.addEventListener("click", async () => {
   document.querySelector(".right_letter").style.display = "block"
   document.querySelector(".right1").style.display = "none"
   document.querySelector(".right_proposal").style.display = "none"
-  document.querySelector(".right_nda").style.display = "none"  
+  document.querySelector(".right_nda").style.display = "none"
 
   // question1.innerHTML = questionInput;
   // question2.innerHTML = questionInput;
@@ -523,8 +643,19 @@ nda.addEventListener("click", async () => {
   box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
   box1.innerHTML = `
       <img class="w-9 ml-4" src="static/Images/user.png" alt="">
-      <div id="question2"><span class="text-sm">Please enter a brief description of the nda</span></div>
+      <div id="question2"><span class="text-sm"> ${nda_questions[nda_index]}</span></div>
     `;
+
+  nda_index += 1;
+
+  if (nda_index >= 5) {
+    // Set nda_index to 0 and save it to localStorage
+    localStorage.setItem('nda_index', 0);
+
+  } else {
+    // Update nda_index in localStorage
+    localStorage.setItem('nda_index', nda_index.toString());
+  }
 
 
   container.appendChild(box1);
@@ -584,7 +715,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     // Create the second instance
     const box2 = document.createElement('div');
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
-     
+
 
     if (isFirstIteration) {
       box2.innerHTML = `

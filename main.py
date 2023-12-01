@@ -19,16 +19,14 @@ app.secret_key = 'ccl_bot'
 app.config["MONGO_URI"] = "mongodb+srv://denazirite:admin1server@cluster0.yr0yegx.mongodb.net/ccl-bot?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
-all_sections = {"introduction":"Introduction", "about_cyphercrescent":"About CyperCrescent", 
-                "our_team":"Our Team", "our_commitment":"Our Commitment", "our_clients":"Our Clients",
-                "overview_template":"Overview","problems":"Problems",
-                "proposed_solution":"Proposed Solution", "importance":"Importance/ Business value", 
-                "benefits":"Benefits", "executive_summary":"Executive Summary"}
+all_sections = {"introduction": "Introduction", "about_cyphercrescent": "About CyperCrescent",
+                "our_team": "Our Team", "our_commitment": "Our Commitment", "our_clients": "Our Clients",
+                "overview_template": "Overview", "problems": "Problems",
+                "proposed_solution": "Proposed Solution", "importance": "Importance/ Business value",
+                "benefits": "Benefits", "executive_summary": "Executive Summary"}
 
-keys = ['about_cyphercrescent', 'our_team', 'our_commitment', 'our_clients', 
-        'overview_template', 'introduction', 'problems', 'proposed_solution', 'importance', 'benefits', 'executive_summary'] 
-
-
+keys = ['about_cyphercrescent', 'our_team', 'our_commitment', 'our_clients',
+        'overview_template', 'introduction', 'problems', 'proposed_solution', 'importance', 'benefits', 'executive_summary']
 
 
 @app.route("/")
@@ -42,7 +40,8 @@ def home():
     session.setdefault('answer_data_list', [])
     session.setdefault('answer_letter', [])
     session.setdefault('question_data_list', [])
-    
+    session.setdefault('nda_question_list', [])
+
     if 'chat_session' not in session:
         # If not present, set it to 0
         session.setdefault('chat_session', 0)
@@ -63,8 +62,6 @@ def home():
         print(session['chat_session'])
         print(session)
 
-
-
     return render_template("index.html", myChats=myChats)
 
 
@@ -77,10 +74,11 @@ def qa():
 
         chat = mongo.db.chats.find_one({"question": question})
         print(chat)
-        if chat:            
+        if chat:
             # Exclude _id field from the retrieved chat document
             chat.pop('_id', None)
-            data = {"session": session['chat_session'], "question": question, "answer": f"{chat['answer']}"}
+            data = {"session": session['chat_session'],
+                    "question": question, "answer": f"{chat['answer']}"}
 
             return jsonify(data)
         else:
@@ -103,13 +101,12 @@ def qa():
             # Append the values to the session list
 
             session['answer_data_list'].append(data)
-            
-           
+
             # return jsonify(data)
 
             # Remove _id field from all documents in the session list
             for item in session['answer_data_list']:
-                item.pop('_id', None)            
+                item.pop('_id', None)
 
             results = session['answer_data_list']
             print('openai RETURED: ')
@@ -136,27 +133,27 @@ def getnext():
         for sectId in section_ids:
             s_id = keys.index(sectId)
             print("s_id ", s_id, '~ ', sectId)
-            url + "questions/" + str(s_id)                    
+            url + "questions/" + str(s_id)
             response = requests.get(url + "questions/" + str(s_id))
             json_response = response.json()
-            
 
             if json_response["questions"] == []:
-                   
-                # print("URL......", url + "templates/" + str(s_id))  
+
+                # print("URL......", url + "templates/" + str(s_id))
                 response = requests.get(url + "templates/" + str(s_id))
-                json_response = response.json()    
+                json_response = response.json()
 
                 print("JSON RESPONSE NEW......", json_response)
                 chat_box = ""
                 if json_response["templates"][0].strip("[]") != '':
                     try:
-                        chat_box = "**" + json_response["templates"][0].strip("[]").split('~')[0] + "**" + "\n\n" + json_response["templates"][0].strip("[]").split('~')[1] + "\n\n"
+                        chat_box = "**" + json_response["templates"][0].strip("[]").split(
+                            '~')[0] + "**" + "\n\n" + json_response["templates"][0].strip("[]").split('~')[1] + "\n\n"
                         print("chat_box ......", chat_box)
 
                         data = {"session": str(session['chat_session']), "question": "",
-                        "answer": markdown.markdown(chat_box)}
-                        
+                                "answer": markdown.markdown(chat_box)}
+
                         preview_sections.append(data)
 
                         # session['answer_data_list'].append(chat_box)
@@ -169,15 +166,13 @@ def getnext():
                         # chat_box = "**" + json_response["templates"][0].strip("[]").split('~')[0] + "**" + "\n\n" + json_response["templates"][0].strip("[]").split('~')[1]
                         chat_box = "...>"
                 else:
-                    chat_box = "..."           
+                    chat_box = "..."
             else:
                 print('ddd')
 
-        
     # data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
     return jsonify(preview_sections)
 # @app.route('/call_python_function', methods=["GET", "POST"])
-
 
 
 @app.route("/letter", methods=["GET", "POST"])
@@ -189,10 +184,11 @@ def qletter():
 
         chat = mongo.db.chats.find_one({"question": question})
         print(chat)
-        if chat:            
+        if chat:
             # Exclude _id field from the retrieved chat document
             chat.pop('_id', None)
-            data = {"session": session['chat_session'], "question": question, "answer": f"{chat['answer']}"}
+            data = {"session": session['chat_session'],
+                    "question": question, "answer": f"{chat['answer']}"}
 
             return jsonify(data)
         else:
@@ -232,6 +228,55 @@ def qletter():
     return jsonify(data)
 
 
+@app.route("/nda", methods=["GET", "POST"])
+def qnda():
+    print("HEEEELLLLLLOOOOOO")
+    url = 'http://54.174.77.47/api/v1/NDA/generate'
+    chat_box = ""
+    preview_sections = []  
+
+    if request.method == "POST":
+        print(request.json)
+        question = request.json.get("question")
+        print(question)
+
+        if question != "What is the client's email?":
+            # Append the values to the session list
+            session['nda_question_list'].append(question)
+            response = ''
+        else:
+            session['nda_question_list'].append(question)
+            data = session['nda_question_list']
+            response = requests.post(url, json=data)
+            # Check the response
+            if response.status_code == 200:
+                print('Success!')
+                print(response.json())
+                return jsonify(response)
+            else:
+                print('Error:', response.status_code)
+                print(response.text)
+
+
+
+        # return jsonify(data)
+
+        # Remove _id field from all documents in the session list
+        # for item in session['answer_letter']:
+        #     item.pop('_id', None)
+
+        # results = session['answer_letter']
+        # print('openai RETURED: ')
+        # print(results)
+        # print(session)
+        # print(session['answer_data_list'])
+
+    return jsonify(response)
+    # data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
+
+    # return jsonify(data)
+
+
 # @app.route("/next", methods=["GET", "POST"])
 # def getnext():
 #     url = "http://54.174.77.47/api/v1/"
@@ -246,16 +291,16 @@ def qletter():
 #         for sectId in keys:
 #             s_id = keys.index(sectId)
 #             print("s_id ", s_id, '~ ', sectId)
-#             url + "questions/" + str(s_id)                    
+#             url + "questions/" + str(s_id)
 #             response = requests.get(url + "questions/" + str(s_id))
 #             json_response = response.json()
-            
+
 
 #             if json_response["questions"] == []:
-                   
-#                 # print("URL......", url + "templates/" + str(s_id))  
+
+#                 # print("URL......", url + "templates/" + str(s_id))
 #                 response = requests.get(url + "templates/" + str(s_id))
-#                 json_response = response.json()    
+#                 json_response = response.json()
 
 #                 print("JSON RESPONSE NEW......", json_response)
 #                 chat_box = ""
@@ -266,7 +311,7 @@ def qletter():
 
 #                         data = {"session": str(session['chat_session']), "question": "",
 #                         "answer": chat_box}
-                        
+
 #                         preview_sections.append(data)
 
 #                         # session['answer_data_list'].append(chat_box)
@@ -279,11 +324,11 @@ def qletter():
 #                         # chat_box = "**" + json_response["templates"][0].strip("[]").split('~')[0] + "**" + "\n\n" + json_response["templates"][0].strip("[]").split('~')[1]
 #                         chat_box = "...>"
 #                 else:
-#                     chat_box = "..."           
+#                     chat_box = "..."
 #             else:
 #                 print('ddd')
 
-        
+
 #     # data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
 #     return jsonify(preview_sections)
 

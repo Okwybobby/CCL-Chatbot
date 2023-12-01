@@ -1,4 +1,4 @@
-
+import os
 import markdown
 
 import requests
@@ -323,5 +323,6 @@ def qletter():
     # # result = your_python_function(param1, param2)
     # return jsonify(result=result)
 
+port = int(os.environ.get('PORT', 5001))
 
-app.run(debug=True, port=5001)
+app.run(debug=True)

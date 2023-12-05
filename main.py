@@ -7,7 +7,7 @@ from flask import Flask, render_template, jsonify, request, session
 from flask_pymongo import PyMongo
 import openai
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 app = Flask(__name__)
@@ -31,10 +31,38 @@ keys = ['about_cyphercrescent', 'our_team', 'our_commitment', 'our_clients',
 
 @app.route("/")
 def home():
-    chats = mongo.db.chats.find({})
+    # chats = mongo.db.chats.find({})
     # chats = {'áaa':'áaa', 'bbb':'áaa','ccc':'áaa'}
+    url = "http://54.174.77.47/api/v1/chat"
+    i = str(1)
+    url = "http://54.174.77.47/api/v1/conversations/user/" + i
+
+    
+    headers = {'accept': 'application/json'}
+
+    response = requests.get(url, headers=headers)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        data = response.json()  # Assuming the response is in JSON format
+        #print(data)
+    else:
+        print(f"Error: {response.status_code}")
+        #print(response.text)
+
+
+    # Extracting the 'prompts' array from the first item in the 'data' list
+    try:
+        prompts_array = data[0]['prompts']
+    except Exception as e:
+        prompts_array = []
+
+    # Now 'prompts_array' contains the array of prompts
+    #print('prompts_array: ', prompts_array)
+
+    chats  = prompts_array
     myChats = [chat for chat in chats]
-    # print(myChats)
+    # #print(myChats)
 
     # Initialize an empty list in the session if it doesn't exist
     session.setdefault('answer_data_list', [])
@@ -67,56 +95,57 @@ def home():
 
 @app.route("/api", methods=["GET", "POST"])
 def qa():
-    print("HEEEELLLLLLOOOOOO")
+    print("API :::::")
+    url = "http://54.174.77.47/api/v1/chat"
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+
     if request.method == "POST":
-        print(request.json)
-        question = request.json.get("question")
+        #print(request.json)
 
-        chat = mongo.db.chats.find_one({"question": question})
-        print(chat)
-        if chat:
-            # Exclude _id field from the retrieved chat document
-            chat.pop('_id', None)
-            data = {"session": session['chat_session'],
-                    "question": question, "answer": f"{chat['answer']}"}
+        data = request.json 
+        # question = request.json.get("question")
+        # sender_id = request.json.get("sender_id")
+        # conversation_id = request.json.get("conversation_id")
 
-            return jsonify(data)
+        # data = {"session": str(session['chat_session']), "question": question, "answer": response["choices"][0]["text"]}
+
+        response = requests.post(url, json=data, headers=headers)
+
+        if response.status_code == 200:
+            # Request was successful
+            response_json = response.json()
+
+            print("API response:", response_json)
+            #print("API response:.........:::::::", response_json.get("AI"))
+            session['answer_data_list'].append(response_json.get("AI"))
+            session['question_data_list'].append(response_json.get("Human"))
         else:
-            response = openai.Completion.create(
-                model="text-davinci-003",
-                prompt=question,
-                temperature=0.7,
-                max_tokens=256,
-                top_p=1,
-                frequency_penalty=0,
-                presence_penalty=0
-            )
-            print(response)
+            # Request failed
+            print(f"Error: {response.status_code} - {response.text}")
 
-            data = {"session": str(session['chat_session']), "question": question,
-                    "answer": response["choices"][0]["text"]}
-            # mongo.db.chats.insert_one({"question": question, "answer": response["choices"][0]["text"]})
-            mongo.db.chats.insert_one(data)
+        # Combine lists into a dictionary
+        results = dict(zip(session['question_data_list'], session['answer_data_list']))
 
-            # Append the values to the session list
+        # Remove _id field from all documents in the session list
+        # for item in session['answer_data_list']:
+        # item.pop('_id', None)
+        # response = requests.get(url)
+        # json_response = response.json()
 
-            session['answer_data_list'].append(data)
+        
+        # results = session['answer_data_list']
+        #print('openai RETURED: ')
+        #print(results)
 
-            # return jsonify(data)
 
-            # Remove _id field from all documents in the session list
-            for item in session['answer_data_list']:
-                item.pop('_id', None)
+        # print(session)
+        # print(session['answer_data_list'])
+        # return jsonify(results)
 
-            results = session['answer_data_list']
-            print('openai RETURED: ')
-            print(results)
-            print(session)
-            # print(session['answer_data_list'])
-            return jsonify(results)
-    data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
-
-    return jsonify(data)
+    return jsonify(results)
 
 
 @app.route("/next", methods=["GET", "POST"])
@@ -167,8 +196,33 @@ def getnext():
                         chat_box = "...>"
                 else:
                     chat_box = "..."
-            else:
-                print('ddd')
+            elif json_response["section_name"] == "overview_template":
+                chat_box = "**OVERVIEW** + \n\n CypherCrescent's Cutting-Edge Production Optimization System tackles Nigeria's oil industry challenges with precision. By integrating advanced tech and adaptive algorithms, it delivers real-time data analytics for informed decision-making. What sets us apart is tailored solutions to individual operational nuances, ensuring a dynamic, sustainable, and efficient production optimization that stands ahead in the market."
+                data = {"session": str(session['chat_session']), "question": "",
+                                "answer": markdown.markdown(chat_box)}
+
+                preview_sections.append(data)
+                # print('ddd')
+            elif json_response["section_name"] == "introduction":
+                chat_box =  "**INTRODUCTION** + \n\n In the dynamic landscape of Nigeria's oil industry, CypherCrescent introduces the Cutting-Edge Production Optimization System. This groundbreaking solution leverages advanced technology and adaptive algorithms, promising unparalleled precision in wellhead simulations. As manufacturing efficiency takes center stage, CypherCrescent emerges as a transformative force, revolutionizing production optimization."
+                data = {"session": str(session['chat_session']), "question": "",
+                                "answer": markdown.markdown(chat_box)}
+
+                preview_sections.append(data)
+            elif json_response["section_name"] == "problems":
+                chat_box =  "**PROBLEMS** + \n\n The challenges facing Nigeria's oil companies demand a revolutionary solution. CypherCrescent's Cutting-Edge Production Optimization System addresses critical issues in wellhead simulation and manufacturing efficiency. Through advanced technology and adaptive algorithms, it offers a tailored approach to individual operational challenges, setting a new benchmark in the industry."
+                data = {"session": str(session['chat_session']), "question": "",
+                                "answer": markdown.markdown(chat_box)}
+
+                preview_sections.append(data)
+            elif json_response["section_name"] == "executive_summary":
+                chat_box =  "**EXECUTIVE SUMMARY** + \n\n CypherCrescent's Cutting-Edge Production Optimization System presents a paradigm shift for Nigeria's oil companies. By seamlessly integrating advanced technology and adaptive algorithms, our solution ensures real-time precision in wellhead simulations. Tailored to address unique operational challenges, it stands as a dynamic, sustainable, and efficient production optimization system, poised to redefine industry standards."
+                data = {"session": str(session['chat_session']), "question": "",
+                                "answer": markdown.markdown(chat_box)}
+
+                preview_sections.append(data)
+            
+
 
     # data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
     return jsonify(preview_sections)
@@ -233,20 +287,30 @@ def qnda():
     print("HEEEELLLLLLOOOOOO")
     url = 'http://54.174.77.47/api/v1/NDA/generate'
     chat_box = ""
-    preview_sections = []  
+    preview_sections = []
 
     if request.method == "POST":
         print(request.json)
-        question = request.json.get("question")
+
+        json_payload = request.json
+
+        # Extract individual parameters dynamically
+        for question, answer in json_payload.items():
+            print(f'{question}: {answer}')
+
+        # question = request.json.get("question")
         print(question)
 
         if question != "What is the client's email?":
             # Append the values to the session list
             session['nda_question_list'].append(question)
             response = ''
-        else:
+            print('Full list', session['nda_question_list'])
+        else:            
             session['nda_question_list'].append(question)
             data = session['nda_question_list']
+
+            print('nda_question_list....:::', data)
             response = requests.post(url, json=data)
             # Check the response
             if response.status_code == 200:
@@ -256,8 +320,6 @@ def qnda():
             else:
                 print('Error:', response.status_code)
                 print(response.text)
-
-
 
         # return jsonify(data)
 
@@ -370,4 +432,4 @@ def qnda():
 
 port = int(os.environ.get('PORT', 5001))
 
-# app.run(debug=True)
+app.run(debug=True)

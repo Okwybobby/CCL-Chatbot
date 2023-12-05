@@ -66,13 +66,36 @@ const handleKeyDown = async (event) => {
     // question1.innerHTML = questionInput;
     // question2.innerHTML = questionInput;
 
+    // Parameters
+    let params = {
+      "sender_id": "1",
+      "conversation_id": "1",
+      "prompt": questionInput,
+      "use_history": true
+    };
+
     // Get the answer and populate it! 
-    let allresults = await postData("/api", { "question": questionInput })
+    // let allresults = await postData("/api", { "question": questionInput })
+    let allresults = await postData("/api", params)
 
     // Log allresults to understand its structure
     console.log("API Response:", allresults)
-
     console.dir(allresults)
+
+    // Parse the JSON string into a JavaScript object
+    // let responseObject = JSON.parse(allresults)
+    let responseObject = allresults
+
+    // Get an array of keys
+    const keysArray = Object.keys(responseObject);
+
+    // Get an array of values
+    const valuesArray = Object.values(responseObject);
+
+    // Output the arrays
+    console.log('Keys:', keysArray);
+    console.log('Values:', valuesArray);
+
 
     // Get the container element
     const container = document.getElementById('container');
@@ -81,16 +104,18 @@ const handleKeyDown = async (event) => {
 
 
     // Loop through 'allresults' array and create instances dynamically
-    allresults.forEach(res => {
+    // responseObject.forEach(res => {
+    for (let key in responseObject) {
 
-      console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+      // console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
+      console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
 
       // Create the first instance
       const box1 = document.createElement('div');
       box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
       box1.innerHTML = `
       <img class="w-9 ml-4" src="static/Images/user.png" alt="">
-      <div id="question2"><span class="text-sm">${res.question}</span></div>
+      <div id="question2"><span class="text-sm">${key}</span></div>
     `;
 
       // Create the second instance
@@ -101,7 +126,7 @@ const handleKeyDown = async (event) => {
         <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
-          <div id="solution"><span class="text-sm">${res.answer}</span></div>
+          <div id="solution"><span class="text-sm">${responseObject[key]}</span></div>
         </div>
       </div>
     `;
@@ -109,7 +134,8 @@ const handleKeyDown = async (event) => {
       // Append both instances to the container
       container.appendChild(box1);
       container.appendChild(box2);
-    });
+      // });
+    };
 
 
     // Get the existing element with id 'chatbox'
@@ -140,50 +166,102 @@ const handleKeyDown2 = async (event) => {
     // question1.innerHTML = questionInput;
     // question2.innerHTML = questionInput;
 
+    // Parameters
+    let params = {
+      "sender_id": "1",
+      "conversation_id": "1",
+      "prompt": questionInput,
+      "use_history": true
+    };
+
+
+
+
+
     // Get the answer and populate it! 
-    let allresults = await postData("/api", { "question": questionInput })
+    let allresults = await postData("/api", params)
 
     // Log allresults to understand its structure
     console.log("API Response:", allresults)
 
     console.dir(allresults)
 
+    let responseObject = allresults
+
+    // Get an array of keys
+    const keysArray = Object.keys(responseObject);
+
+    // Get an array of values
+    const valuesArray = Object.values(responseObject);
+
+    // Output the arrays
+    console.log('Keys:', keysArray);
+    console.log('Values:', valuesArray);
+
     // Get the container element
     const container = document.getElementById('container');
 
-
-
-
-    // Loop through 'allresults' array and create instances dynamically
-    allresults.forEach(res => {
-
-      console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+    for (let key in responseObject) {
+      console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
 
       // Create the first instance
       const box1 = document.createElement('div');
       box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
       box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
-      <div id="question2"><span class="text-sm">${res.question}</span></div>
-    `;
+       <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+       <div id="question2"><span class="text-sm">${key}</span></div>
+     `;
 
       // Create the second instance
       let box2 = document.createElement('div');
       box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
       box2.innerHTML = `
-      <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
-        <div class="flex space-y-4 flex-col">
-          <div id="question1"><span class="text-sm">CCL Bot</span></div>
-          <div id="solution"><span class="text-sm">${res.answer}</span></div>
-        </div>
-      </div>
-    `;
+       <div class="box w-[35vw] flex justify-start space-x-6">
+         <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+         <div class="flex space-y-4 flex-col">
+           <div id="question1"><span class="text-sm">CCL Bot</span></div>
+           <div id="solution"><span class="text-sm">${responseObject[key]}</span></div>
+         </div>
+       </div>
+     `;
 
       // Append both instances to the container
       container.appendChild(box1);
       container.appendChild(box2);
-    });
+
+
+    }
+
+    // Loop through 'allresults' array and create instances dynamically
+    // allresults.forEach(res => {
+
+    //   console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+
+    //   // Create the first instance
+    //   const box1 = document.createElement('div');
+    //   box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+    //   box1.innerHTML = `
+    //   <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+    //   <div id="question2"><span class="text-sm">${res.question}</span></div>
+    // `;
+
+    //   // Create the second instance
+    //   let box2 = document.createElement('div');
+    //   box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+    //   box2.innerHTML = `
+    //   <div class="box w-[35vw] flex justify-start space-x-6">
+    //     <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+    //     <div class="flex space-y-4 flex-col">
+    //       <div id="question1"><span class="text-sm">CCL Bot</span></div>
+    //       <div id="solution"><span class="text-sm">${res.answer}</span></div>
+    //     </div>
+    //   </div>
+    // `;
+
+    //   // Append both instances to the container
+    //   container.appendChild(box1);
+    //   container.appendChild(box2);
+    // });
 
 
     // Get the existing element with id 'chatbox'
@@ -271,16 +349,28 @@ const handleKeyDown_letter = async (event) => {
 };
 
 
+const handleKeyDown_proposal = async (event) => {
+
+
+}
+
+
 const handleKeyDown_nda = async (event) => {
+
+  let nda_index = parseInt(localStorage.getItem('nda_index'))
+  let nda_questions_2 = ""
+
   if (event.ctrlKey && event.key === 'Enter') {
 
     questionInput = document.getElementById("questionInput_nda").innerText;
-    console.log("Clicked sendButton!!!", questionInput)
+    console.log("Clicked NDA sendButton!!!", questionInput)
 
     document.getElementById("questionInput_nda").innerText = "";
 
+    nda_questions_2 = nda_questions[nda_index]
+
     // Get the answer and populate it! 
-    let allresults = await postData("/nda", { "question": questionInput })
+    let allresults = await postData("/nda", {[nda_questions_2] : questionInput })
 
     // Log allresults to understand its structure
     console.log("API Response:", allresults)
@@ -290,10 +380,61 @@ const handleKeyDown_nda = async (event) => {
     if (allresults == '') {
 
       // Add a new string to the array
-      nda_answers.push("New String");
+      // nda_answers.push("New String");
 
       // Save the updated array back to localStorage
-      localStorage.setItem('nda_answers', JSON.stringify(nda_answers));
+      // localStorage.setItem('nda_answers', JSON.stringify(nda_answers));
+      allresults = questionInput
+
+      nda_index += 1
+
+      if (nda_index >= 5) {
+        // Set nda_index to 0 and save it to localStorage
+        localStorage.setItem('nda_index', 0);
+
+      } else {
+        // Update nda_index in localStorage
+        localStorage.setItem('nda_index', nda_index.toString());
+      }
+
+
+      ///////////////////////////////////////////////////////
+
+      let box2 = document.createElement('div');
+      box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+      box2.innerHTML = `
+       <div class="box w-[35vw] flex justify-start space-x-6">
+         <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+         <div class="flex space-y-4 flex-col">
+           <div id="question1"><span class="text-sm">CCL Bot</span></div>
+           <div id="solution"><span class="text-sm">${allresults}</span></div>
+         </div>
+       </div>
+     `;
+
+      // Append both instances to the container
+      // container.appendChild(box1);
+
+
+      ///////////////////////////////////////////////////////
+
+      let container = document.getElementById('container_nda');
+
+      let box1 = document.createElement('div');
+      box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+      box1.innerHTML = `
+      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <div id="question2"><span class="text-sm">Q: ${nda_questions[nda_index]}</span></div>
+    `;
+
+
+      container.appendChild(box2);
+      container.appendChild(box1);
+
+      // Get the existing element with id 'chatbox'
+      const chatbox = document.getElementById('next_nda');
+
+      chatbox.parentNode.insertBefore(container, chatbox);
 
 
     } else {
@@ -322,7 +463,6 @@ const handleKeyDown_nda = async (event) => {
       // container.appendChild(box1);
       container.appendChild(box2);
     }
-
 
 
 
@@ -356,6 +496,10 @@ const handleKeyDown_nda = async (event) => {
     //   container.appendChild(box1);
     //   container.appendChild(box2);
     // });
+
+
+
+
 
 
     // Get the existing element with id 'chatbox'
@@ -637,6 +781,8 @@ nda.addEventListener("click", async () => {
   // console.log(`Question: ${res.question}, Answer: ${res.answer}`);
   // Please enter a brief description of what the nda is about
 
+  nda_index = 0
+  localStorage.setItem('nda_index', 0);
 
   // Create the first instance
   const box1 = document.createElement('div');
@@ -645,17 +791,6 @@ nda.addEventListener("click", async () => {
       <img class="w-9 ml-4" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm"> ${nda_questions[nda_index]}</span></div>
     `;
-
-  nda_index += 1;
-
-  if (nda_index >= 5) {
-    // Set nda_index to 0 and save it to localStorage
-    localStorage.setItem('nda_index', 0);
-
-  } else {
-    // Update nda_index in localStorage
-    localStorage.setItem('nda_index', nda_index.toString());
-  }
 
 
   container.appendChild(box1);
@@ -692,7 +827,93 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
   // Get the ids of checked checkboxes
   const checkedIds = checkedCheckboxes.map(checkbox => checkbox.id);
 
-  let allresults = await postData("/next", { "sections": checkedIds })
+  console.log('CheckIds: ')
+  console.dir(checkedIds)
+
+
+  const elementToRemove = "default-checkbox";
+  const indexToRemove = checkedIds.indexOf(elementToRemove);
+
+  if (indexToRemove !== -1) {
+    checkedIds.splice(indexToRemove, 1);
+    console.log(`Removed "${elementToRemove}" from the array.`);
+    console.dir(checkedIds)
+  } else {
+    console.log(`"${elementToRemove}" not found in the array.`);
+  }
+
+
+  // 4  - overview_template
+  // 5  - introduction
+  // 6  - problems
+  // 10  - executive_summary
+
+  let string_input = "\n based on this text input, "
+  const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
+  const searchStrings_index = [4, 5, 6, 10];
+
+  questionInput = document.getElementById("questionInput_proposal").innerText;
+  console.log("Clicked sendButton!!!", questionInput)
+
+  document.getElementById("questionInput_proposal").innerText = "";
+
+  allresultsArray = []
+
+  // const index = myArray.indexOf(searchText);
+
+  for (const searchString of checkedIds) {
+    // if (checkedIds.includes(searchString)) {
+    let indexIds = searchStrings.indexOf(searchString)
+    if (indexIds == 0) {
+      console.log(`${searchString} found in the array`);
+      string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
+
+      // Parameters
+      let params = {
+        "sender_id": "11112222",
+        "conversation_id": "1",
+        "prompt": string_input,
+        "use_history": true
+      };
+
+
+      let allresults = await postData("/api", params)
+
+      // Log allresults to understand its structure
+      console.log("API Response:", allresults)
+      console.dir(allresults)
+
+      let responseObject = allresults
+
+      // Get an array of keys
+      const keysArray = Object.keys(responseObject);
+
+      // Get an array of values
+      const valuesArray = Object.values(responseObject);
+
+      // Output the arrays
+      console.log('Keys:', keysArray);
+      console.log('Values:', valuesArray);
+
+
+      for (let key in responseObject) {
+
+        // console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
+        console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
+        allresultsArray.push(responseObject[key])
+      }
+    } else {
+      console.log(`${searchString} not found in the array`);
+      allresults = await postData("/next", { "sections": checkedIds })
+      // break;      
+      allresultsArray.push(...allresults)
+    }
+
+
+  }
+
+  console.log('allresultsArray:.......')
+  console.log(allresultsArray)
 
 
   // Get the container element

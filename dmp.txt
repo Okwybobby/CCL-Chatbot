@@ -1,0 +1,141 @@
+4
+5
+6
+10
+
+
+4  - overview_template
+5  - introduction
+6  - problems
+10  - executive_summary
+
+"How will the implementation of Cyphercescent's digitalised tools enhance data integration and consistency, ultimately leading to improved success rates for [specific goal] and [related outcome]?",
+    "What are the key benefits and objectives of implementing the Enterprise Planning System (EPS) in your organisation's business planning process?"
+
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  if request.method == "POST":
+        print(request.json)
+        question = request.json.get("question")
+
+        chat = mongo.db.chats.find_one({"question": question})
+        print(chat)
+        if chat:
+            # Exclude _id field from the retrieved chat document
+            chat.pop('_id', None)
+            data = {"session": session['chat_session'],
+                    "question": question, "answer": f"{chat['answer']}"}
+
+            return jsonify(data)
+        else:
+            response = openai.Completion.create(
+                model="text-davinci-003",
+                prompt=question,
+                temperature=0.7,
+                max_tokens=256,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
+            )
+            print(response)
+
+            data = {"session": str(session['chat_session']), "question": question,
+                    "answer": response["choices"][0]["text"]}
+            # mongo.db.chats.insert_one({"question": question, "answer": response["choices"][0]["text"]})
+            mongo.db.chats.insert_one(data)
+
+            # Append the values to the session list
+
+            session['answer_data_list'].append(data)
+
+            # return jsonify(data)
+
+            # Remove _id field from all documents in the session list
+            for item in session['answer_data_list']:
+                item.pop('_id', None)
+
+            results = session['answer_data_list']
+            print('openai RETURED: ')
+            print(results)
+            print(session)
+            # print(session['answer_data_list'])
+            return jsonify(results)
+    data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
+
+
+
+
+
+
+
+
+
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+// Function to create and append HTML elements
+  function createElement(type, attributes, textContent) {
+    const element = document.createElement(type);
+
+    for (const key in attributes) {
+      if (attributes.hasOwnProperty(key)) {
+        element.setAttribute(key, attributes[key]);
+      }
+    }
+
+    if (textContent) {
+      element.textContent = textContent;
+    }
+
+    return element;
+  }
+
+  // Create form elements
+  const formContainer = document.getElementById('dynamicFormContainer');
+  const form = createElement('form', { class: 'bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4' });
+  const usernameLabel = createElement('label', { class: 'block text-gray-700 text-sm font-bold mb-2' }, 'Username');
+  const usernameInput = createElement('input', {
+    class: 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline',
+    id: 'username',
+    type: 'text',
+    placeholder: 'Username'
+  });
+
+  const passwordLabel = createElement('label', { class: 'block text-gray-700 text-sm font-bold mb-2' }, 'Password');
+  const passwordInput = createElement('input', {
+    class: 'shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline',
+    id: 'password',
+    type: 'password',
+    placeholder: '******************'
+  });
+
+  const passwordErrorMsg = createElement('p', { class: 'text-red-500 text-xs italic' }, 'Please choose a password.');
+
+  const signInButton = createElement('button', {
+    class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline',
+    type: 'button'
+  }, 'Sign In');
+
+  const forgotPasswordLink = createElement('a', {
+    class: 'inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800',
+    href: '#'
+  }, 'Forgot Password?');
+
+  const rightsReservedText = createElement('p', { class: 'text-center text-gray-500 text-xs' }, '&copy;2020 Acme Corp. All rights reserved.');
+
+  // Append elements to the form
+  form.appendChild(usernameLabel);
+  form.appendChild(usernameInput);
+  form.appendChild(passwordLabel);
+  form.appendChild(passwordInput);
+  form.appendChild(passwordErrorMsg);
+  form.appendChild(signInButton);
+  form.appendChild(forgotPasswordLink);
+
+  // Append form and rights reserved text to the container
+  formContainer.appendChild(form);
+  formContainer.appendChild(rightsReservedText);

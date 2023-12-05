@@ -35,10 +35,13 @@
             margin-right: 10px;
             /* Adjust the value to your desired spacing */
         }
-    </style>
-    
 
-    <title>New chat</title>
+        /* .chat {
+            overflow: auto;
+        } */
+    </style>
+
+    <title>CCL Chat bot</title>
 </head>
 
 <body class="bg-chatblack-50">
@@ -70,12 +73,18 @@
                 <span>New Chat</span>
             </button>
             <div class="text-xs m-4 mx-8 text-gray-400">Today</div>
-            <div class="chats flex flex-col justify-center items-center space-y-2">
 
+            <div class="chats flex flex-col justify-center items-center space-y-2"
+                style="max-height: 500px; overflow: auto;">                       
+
+                <!-- <div style="margin-bottom: 14rem;">
+
+                </div> -->
 
                 {% for chat in myChats %}
                 <div
                     class="chat space-x-2 opacity-80 w-[90%] px-5 py-2 rounded-md bg-gray-600 cursor-pointer flex justify-start items-center">
+
                     <svg stroke="currentColor"
                         fill="none"
                         stroke-width="2"
@@ -634,6 +643,10 @@
 
                 </div>
 
+                
+                <div id="dynamicFormContainer" class="w-full max-w-xs"></div>
+
+
                 <div id="next_proposal"
                     class="pt-50 flex justify-end w-full mt-52">
                     <div class="flex pr-5 float: right">
@@ -973,9 +986,11 @@
     </div>
 
     <!-- <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
-    
-    <script defer src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script defer
+        src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script defer
+        src="{{ url_for('static', filename='js/script.js') }}"></script>
     <!-- <script src="/static/js/script.js"></script> -->
 
 </body>

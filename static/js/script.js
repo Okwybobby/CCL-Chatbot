@@ -361,131 +361,131 @@ const handleKeyDown_letter = async (event) => {
 
 
 const handleKeyDown_proposal = async (event) => {
+  if (event.ctrlKey && event.key === 'Enter') {
+    // alert('Generate section')
 
-  // alert('Generate section')
+    // Select all checkboxes
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-  // Select all checkboxes
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    // Filter out checked checkboxes
+    const checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
 
-  // Filter out checked checkboxes
-  const checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+    // Get the ids of checked checkboxes
+    const checkedIds = checkedCheckboxes.map(checkbox => checkbox.id);
 
-  // Get the ids of checked checkboxes
-  const checkedIds = checkedCheckboxes.map(checkbox => checkbox.id);
-
-  console.log('CheckIds: ')
-  console.dir(checkedIds)
-
-
-  const elementToRemove = "default-checkbox";
-  const indexToRemove = checkedIds.indexOf(elementToRemove);
-
-  if (indexToRemove !== -1) {
-    checkedIds.splice(indexToRemove, 1);
-    console.log(`Removed "${elementToRemove}" from the array.`);
+    console.log('CheckIds: ')
     console.dir(checkedIds)
-  } else {
-    console.log(`"${elementToRemove}" not found in the array.`);
-  }
 
 
-  // 4  - overview_template
-  // 5  - introduction
-  // 6  - problems
-  // 10  - executive_summary
+    const elementToRemove = "default-checkbox";
+    const indexToRemove = checkedIds.indexOf(elementToRemove);
 
-  let string_input = "\n based on this text input, "
-  const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
-  const searchStrings_index = [4, 5, 6, 10];
-
-  questionInput = document.getElementById("questionInput_proposal").innerText;
-  console.log("Clicked sendButton!!!", questionInput)
-
-  document.getElementById("questionInput_proposal").innerText = "";
-
-  allresultsArray = []
-
-  // const index = myArray.indexOf(searchText);
-
-  for (const searchString of checkedIds) {
-    // if (checkedIds.includes(searchString)) {
-    let indexIds = searchStrings.indexOf(searchString)
-    if (indexIds == 0) {
-      console.log(`${searchString} found in the array`);
-      string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
-
-      // Parameters
-      let params = {
-        "sender_id": "11112222",
-        "conversation_id": "1",
-        "prompt": string_input,
-        "use_history": true
-      };
-
-
-      let allresults = await postData("/api", params)
-
-      // Log allresults to understand its structure
-      console.log("API Response:", allresults)
-      console.dir(allresults)
-
-      let responseObject = allresults
-
-      // Get an array of keys
-      const keysArray = Object.keys(responseObject);
-
-      // Get an array of values
-      const valuesArray = Object.values(responseObject);
-
-      // Output the arrays
-      console.log('Keys:', keysArray);
-      console.log('Values:', valuesArray);
-
-
-      for (let key in responseObject) {
-
-        // console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
-        console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
-        allresultsArray.push(responseObject[key])
-      }
+    if (indexToRemove !== -1) {
+      checkedIds.splice(indexToRemove, 1);
+      console.log(`Removed "${elementToRemove}" from the array.`);
+      console.dir(checkedIds)
     } else {
-      console.log(`${searchString} not found in the array`);
-      allresults = await postData("/next", { "sections": checkedIds })
-      // break;      
-      allresultsArray.push(...allresults)
+      console.log(`"${elementToRemove}" not found in the array.`);
     }
 
 
-  }
+    // 4  - overview_template
+    // 5  - introduction
+    // 6  - problems
+    // 10  - executive_summary
 
-  console.log('allresultsArray:.......')
-  console.log(allresultsArray)
+    let string_input = "\n based on this text input, "
+    const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
+    const searchStrings_index = [4, 5, 6, 10];
+
+    questionInput = document.getElementById("questionInput_proposal").innerText;
+    console.log("Clicked sendButton!!!", questionInput)
+
+    document.getElementById("questionInput_proposal").innerText = "";
+
+    allresultsArray = []
+
+    // const index = myArray.indexOf(searchText);
+
+    for (const searchString of checkedIds) {
+      // if (checkedIds.includes(searchString)) {
+      let indexIds = searchStrings.indexOf(searchString)
+      if (indexIds == 0) {
+        console.log(`${searchString} found in the array`);
+        string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
+
+        // Parameters
+        let params = {
+          "sender_id": "11112222",
+          "conversation_id": "1",
+          "prompt": string_input,
+          "use_history": true
+        };
 
 
-  // Get the container element
-  const container = document.getElementById('container_proposal');
+        let allresults = await postData("/api", params)
 
-  let isFirstIteration = true;
-  // Loop through 'allresults' array and create instances dynamically
-  allresults.forEach(res => {
+        // Log allresults to understand its structure
+        console.log("API Response:", allresults)
+        console.dir(allresults)
 
-    console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+        let responseObject = allresults
 
-    // Create the first instance
-    const box1 = document.createElement('div');
-    box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
-    box1.innerHTML = `
+        // Get an array of keys
+        const keysArray = Object.keys(responseObject);
+
+        // Get an array of values
+        const valuesArray = Object.values(responseObject);
+
+        // Output the arrays
+        console.log('Keys:', keysArray);
+        console.log('Values:', valuesArray);
+
+
+        for (let key in responseObject) {
+
+          // console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
+          console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
+          allresultsArray.push(responseObject[key])
+        }
+      } else {
+        console.log(`${searchString} not found in the array`);
+        allresults = await postData("/next", { "sections": checkedIds })
+        // break;      
+        allresultsArray.push(...allresults)
+      }
+
+
+    }
+
+    console.log('allresultsArray:.......')
+    console.log(allresultsArray)
+
+
+    // Get the container element
+    const container = document.getElementById('container_proposal');
+
+    let isFirstIteration = true;
+    // Loop through 'allresults' array and create instances dynamically
+    allresults.forEach(res => {
+
+      console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+
+      // Create the first instance
+      const box1 = document.createElement('div');
+      box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+      box1.innerHTML = `
       <img class="w-9 ml-4" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${res.question}</span></div>
     `;
 
-    // Create the second instance
-    const box2 = document.createElement('div');
-    box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+      // Create the second instance
+      const box2 = document.createElement('div');
+      box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
 
 
-    if (isFirstIteration) {
-      box2.innerHTML = `
+      if (isFirstIteration) {
+        box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
         <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
         <div class="flex space-y-4 flex-col">
@@ -494,9 +494,9 @@ const handleKeyDown_proposal = async (event) => {
         </div>
       </div>
     `;
-      isFirstIteration = false;
-    } else {
-      box2.innerHTML = `
+        isFirstIteration = false;
+      } else {
+        box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
         <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div class="flex space-y-4 flex-col space-x-96 ">          
@@ -504,22 +504,24 @@ const handleKeyDown_proposal = async (event) => {
         </div>
       </div>
     `;
-    }
+      }
 
 
 
 
-    // Append both instances to the container
-    // container.appendChild(box1);
-    container.appendChild(box2);
-  });
+      // Append both instances to the container
+      // container.appendChild(box1);
+      container.appendChild(box2);
+    });
 
 
-  // Get the existing element with id 'chatbox'
-  const chatbox = document.getElementById('next_proposal');
+    // Get the existing element with id 'chatbox'
+    const chatbox = document.getElementById('next_proposal');
 
-  // Insert the container above the 'chatbox' element
-  chatbox.parentNode.insertBefore(container, chatbox);
+    // Insert the container above the 'chatbox' element
+    chatbox.parentNode.insertBefore(container, chatbox);
+  }
+
 }
 
 

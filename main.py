@@ -108,9 +108,9 @@ def qa():
             # Request failed
             # print(f"Error: {response.status_code} - {response.text}")
 
-        # Combine lists into a dictionary
-        results = dict(
-            zip(session['question_data_list'], session['answer_data_list']))       
+            # Combine lists into a dictionary
+            results = dict(
+                zip(session['question_data_list'], session['answer_data_list']))       
 
     return jsonify(results)
 
@@ -212,7 +212,7 @@ def qletter():
             return jsonify(response_json)
         else:
             # Request failed
-            # print(f"Error: {response.status_code} - {response.text}")
+            print(f"Error: {response.status_code} - {response.text}")
 
     
     return jsonify('no results')

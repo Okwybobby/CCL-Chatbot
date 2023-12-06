@@ -12,8 +12,118 @@
 "How will the implementation of Cyphercescent's digitalised tools enhance data integration and consistency, ultimately leading to improved success rates for [specific goal] and [related outcome]?",
     "What are the key benefits and objectives of implementing the Enterprise Planning System (EPS) in your organisation's business planning process?"
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+@app.route("/letter", methods=["GET", "POST"])
+def qletter():
+    print("HEEEELLLLLLOOOOOO")
+    if request.method == "POST":
+        print(request.json)
+        question = request.json.get("question")
+
+        chat = mongo.db.chats.find_one({"question": question})
+        print(chat)
+        if chat:
+            # Exclude _id field from the retrieved chat document
+            chat.pop('_id', None)
+            data = {"session": session['chat_session'],
+                    "question": question, "answer": f"{chat['answer']}"}
+
+            return jsonify(data)
+        else:
+            response = openai.Completion.create(
+                model="text-davinci-003",
+                prompt=question,
+                temperature=0.7,
+                max_tokens=256,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
+            )
+            print(response)
+
+            data = {"session": str(session['chat_session']), "question": question,
+                    "answer": response["choices"][0]["text"]}
+            # mongo.db.chats.insert_one({"question": question, "answer": response["choices"][0]["text"]})
+            mongo.db.chats.insert_one(data)
+
+            # Append the values to the session list
+
+            session['answer_letter'].append(data)
+            # return jsonify(data)
+
+            # Remove _id field from all documents in the session list
+            for item in session['answer_letter']:
+                item.pop('_id', None)
+
+            results = session['answer_letter']
+            print('openai RETURED: ')
+            print(results)
+            print(session)
+            # print(session['answer_data_list'])
+            return jsonify(results)
+    data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
+
+    return jsonify(data)
 
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+["Seplat", "Port Harcourt", "Today",
+                "AC repairs", "denazirite@gmail.com"]
+
+
+      # Extract individual parameters dynamically
+        for question, answer in json_payload.items():
+            print(f'{question}: {answer}')
+
+        # question = request.json.get("question")
+        print(question)
+
+        if question != "What is the client's email?":
+            # Append the values to the session list
+            session['nda_question_list'].append(question)
+            response = ''
+            print('Full list', session['nda_question_list'])
+        else:
+            session['nda_question_list'].append(question)
+            data = session['nda_question_list']
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+else {
+
+      // let nda_answers = JSON.parse(localStorage.getItem('myStringArray')) || [];
+
+
+      // Get the container element
+      // const container = document.getElementById('container_nda');
+      // nda_answers.push(questionInput);
+
+      print('nda_answers:::>>>>>')
+      print(nda_answers)
+
+      // Create the second instance
+      let box2 = document.createElement('div');
+      box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+      box2.innerHTML = `
+       <div class="box w-[35vw] flex justify-start space-x-6">
+         <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+         <div class="flex space-y-4 flex-col">
+           <div id="question1"><span class="text-sm">CCL Bot</span></div>
+           <div id="solution"><span class="text-sm">${nda_questions_2}</span></div>
+         </div>
+       </div>
+     `;
+
+      // Append both instances to the container
+      // container.appendChild(box1);
+      container.appendChild(box2);
+
+      // Set nda_index to 0 and save it to localStorage
+      localStorage.setItem('nda_index', 0);
+    }
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   if request.method == "POST":

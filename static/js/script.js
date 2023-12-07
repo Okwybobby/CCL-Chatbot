@@ -121,7 +121,10 @@ const handleKeyDown = async (event) => {
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
       <img class="w-9 ml-4" src="static/Images/user.png" alt="">
-      <div id="question2"><span class="text-sm">${responseObject["Human"]}</span></div>
+      <div class="flex space-y-4 flex-col">
+        <div id="question_"><span class="text-sm"><b>You</b></span></div>
+        <div id="question2"><span class="text-sm">${responseObject["Human"]}</span></div>
+      </div>
     `;
 
     // Create the second instance
@@ -131,7 +134,7 @@ const handleKeyDown = async (event) => {
       <div class="box w-[35vw] flex justify-start space-x-6">
         <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
         <div class="flex space-y-4 flex-col">
-          <div id="question1"><span class="text-sm">CCL Bot</span></div>
+          <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
           <div id="solution"><span class="text-sm">${responseObject["AI"]}</span></div>
         </div>
       </div>

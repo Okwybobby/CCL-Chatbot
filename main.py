@@ -42,48 +42,58 @@ def home():
     else:
         print(f"Error: {response.status_code}")        
 
+    prompts_array = []
     # Extracting the 'prompts' array from the first item in the 'data' list
     try:
-        prompts_array = data[0]['prompts']
+        
+        # prompts_array = data[0]['prompts']        
+        prompts_array = [item["conversation_name"].strip() for item in data]
+        # prompts_array = data[0]['conversation_name']
+        # print(prompts_array)
     except Exception as e:
-        prompts_array = []    
+        prompts_array = []  
+        print('error', e)  
 
-    chats = prompts_array
-    myChats = [chat for chat in chats]    
+    # chats = prompts_array
+    myChats = prompts_array
+    
+    # myChats = [chat for chat in chats]    
+    print(myChats)
 
-    # Initialize an empty list in the session if it doesn't exist
-    session.setdefault('answer_data_list', [])
-    session.setdefault('answer_letter', [])
-    session.setdefault('question_data_list', [])
+    # # Initialize an empty list in the session if it doesn't exist
+    # session.setdefault('answer_data_list', [])
+    # session.setdefault('answer_letter', [])
+    # session.setdefault('question_data_list', [])
 
-    if 'nda_question_list' not in session:
-        # print('DELETING nda_question_list!!!!')
-        session.setdefault('nda_question_list', [])
+    # if 'nda_question_list' not in session:
+    #     # print('DELETING nda_question_list!!!!')
+    #     session.setdefault('nda_question_list', [])
 
-    if 'chat_session' not in session:
-        # If not present, set it to 0
-        session.setdefault('chat_session', 0)
+    # if 'chat_session' not in session:
+    #     # If not present, set it to 0
+    #     session.setdefault('chat_session', 0)
 
-    if 'section_index' not in session:
-        session.setdefault('section_index', 0)
+    # if 'section_index' not in session:
+    #     session.setdefault('section_index', 0)
 
-    max_session_chat = mongo.db.chats.find_one(sort=[("session", -1)])
+    # max_session_chat = mongo.db.chats.find_one(sort=[("session", -1)])
 
-    if max_session_chat:
-        max_session = max_session_chat["session"]
-        # print(f"The maximum session value is: {max_session}")
-        session['chat_session'] = int(max_session) + 1
-    else:
-        # print("No documents found in the 'chats' collection.")        
-        session['chat_session'] = 1
-        # print(session['chat_session'])
-        # print(session)
+    # if max_session_chat:
+    #     max_session = max_session_chat["session"]
+    #     # print(f"The maximum session value is: {max_session}")
+    #     session['chat_session'] = int(max_session) + 1
+    # else:
+    #     # print("No documents found in the 'chats' collection.")        
+    #     session['chat_session'] = 1
+    #     # print(session['chat_session'])
+    #     # print(session)
 
     return render_template("index.html", myChats=myChats)
 
 
 @app.route("/api", methods=["GET", "POST"])
 def qa():
+    results = ''
     # print("API :::::")
     url = "http://54.174.77.47/api/v1/chat"
 
@@ -102,15 +112,15 @@ def qa():
 
             # print("API response:", response_json)
             # print("API response:.........:::::::", response_json.get("AI"))
-            session['answer_data_list'].append(response_json.get("AI"))
-            session['question_data_list'].append(response_json.get("Human"))
+            # session['answer_data_list'].append(response_json.get("AI"))
+            # session['question_data_list'].append(response_json.get("Human"))
+            results = response_json
         else:
             # Request failed
-            # print(f"Error: {response.status_code} - {response.text}")
+            print(f"Error: {response.status_code} - {response.text}")
 
             # Combine lists into a dictionary
-            results = dict(
-                zip(session['question_data_list'], session['answer_data_list']))       
+            # results = dict(zip(session['question_data_list'], session['answer_data_list']))       
 
     return jsonify(results)
 

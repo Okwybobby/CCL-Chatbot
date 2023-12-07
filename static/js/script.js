@@ -132,7 +132,7 @@ const handleKeyDown = async (event) => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
           <div id="solution"><span class="text-sm">${responseObject["AI"]}</span></div>
@@ -225,7 +225,7 @@ const handleKeyDown2 = async (event) => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
    <div class="box w-[35vw] flex justify-start space-x-6">
-     <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
      <div class="flex space-y-4 flex-col">
        <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
        <div id="solution"><span class="text-sm">${responseObject["AI"]}</span></div>
@@ -341,7 +341,7 @@ const handleKeyDown_letter = async (event) => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
           <div id="solution"><span class="text-sm">${allresults}</span></div>
@@ -500,7 +500,7 @@ const handleKeyDown_proposal = async (event) => {
       if (isFirstIteration) {
         box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
@@ -600,7 +600,7 @@ const handleKeyDown_nda = async (event) => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
        <div class="box w-[35vw] flex justify-start space-x-6">
-         <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+         <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
          <div class="flex space-y-4 flex-col">
            <div id="question1"><span class="text-sm">CCL Bot</span></div>
            <div id="solution"><span class="text-sm">${questionInput}</span></div>
@@ -706,7 +706,7 @@ sendButton.addEventListener("click", async () => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
@@ -767,7 +767,7 @@ sendButton2.addEventListener("click", async () => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>
@@ -1035,7 +1035,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     if (isFirstIteration) {
       box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="https://chat.openai.com/favicon.ico" alt="">
+        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
           <div id="solution"><span class="text-sm">${res.answer}</span></div>

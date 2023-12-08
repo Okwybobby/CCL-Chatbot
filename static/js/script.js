@@ -1098,3 +1098,29 @@ window.addEventListener('beforeunload', function (event) {
 
   localStorage.setItem('nda_answers', [])
 });
+
+
+function toggleDivVisibility() {
+  const menuDiv = document.getElementById('menu');
+  
+  // Check the current state
+  const currentState = menuDiv.getAttribute('data-headlessui-state');
+  
+  // Toggle the visibility and apply animation
+  if (currentState === 'closed') {
+      // Show the div with animation
+      menuDiv.style.opacity = '1';
+      menuDiv.style.transform = 'translateY(0)';
+      menuDiv.setAttribute('data-headlessui-state', 'open');
+  } else {
+      // Hide the div with animation
+      menuDiv.style.opacity = '0';
+      menuDiv.style.transform = 'translateY(-100%)';
+      menuDiv.setAttribute('data-headlessui-state', 'closed');
+  }
+}
+
+// Example: Call toggleDivVisibility when you want to toggle the div
+document.getElementById('headlessui-menu-button').addEventListener("click", async (e) => {
+  toggleDivVisibility();
+})

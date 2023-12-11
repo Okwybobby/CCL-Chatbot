@@ -57,13 +57,16 @@ async function postData(url = "", data = {}) {
 
 
 const handleKeyDown = async (event) => {
+
+  
+
   // if (event.ctrlKey && event.key === 'Enter') {
   if (event.shiftKey && event.key === 'Enter') {
     console.log('Shift + Enter pressed');
   }
 
   if (event.key === 'Enter') {
-
+    console.log('Enter pressed');
     questionInput = document.getElementById("questionInput").innerText;
     //console.log("Clicked sendButton!!!", questionInput)
 
@@ -84,20 +87,33 @@ const handleKeyDown = async (event) => {
     };
 
     // Get the answer and populate it! 
-    let allresults = await postData("/api", params)
+    //////////////////// let allresults = await postData("/api", params)
 
     // Log allresults to understand its structure
     //console.log("API Response:", allresults)
     //console.dir(allresults)
 
+
+
+
+
+
+
+
+
+
+
+
     // Parse the JSON string into a JavaScript object
-    let responseObject = allresults
+    // let responseObject = allresults
+
+    // console.log('responseObject:...', responseObject)
 
     // Get an array of keys
-    const keysArray = Object.keys(responseObject);
+    // const keysArray = Object.keys(responseObject);
 
     // Get an array of values
-    const valuesArray = Object.values(responseObject);
+    // const valuesArray = Object.values(responseObject);
 
     // Output the arrays
     //console.log('Keys:', keysArray);
@@ -115,27 +131,43 @@ const handleKeyDown = async (event) => {
 
     // //console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
     //console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
-    console.dir(responseObject)
+    // console.dir(responseObject)
     // Create the first instance
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+    // box1.innerHTML = `
+    //   <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+    //   <div class="flex space-y-4 flex-col">
+    //     <div id="question_"><span class="text-sm"><b>You</b></span></div>
+    //     <div id="question2"><span class="text-sm">${responseObject["Human"]}</span></div>
+    //   </div>
+    // `;
     box1.innerHTML = `
       <img class="w-9 ml-4" src="static/Images/user.png" alt="">
       <div class="flex space-y-4 flex-col">
         <div id="question_"><span class="text-sm"><b>You</b></span></div>
-        <div id="question2"><span class="text-sm">${responseObject["Human"]}</span></div>
+        <div id="question2"><span class="text-sm">${questionInput}</span></div>
       </div>
     `;
 
     // Create the second instance
     let box2 = document.createElement('div');
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+    // box2.innerHTML = `
+    //   <div class="box w-[35vw] flex justify-start space-x-6">
+    //     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+    //     <div class="flex space-y-4 flex-col">
+    //       <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
+    //       <div id="solution"><span class="text-sm">${responseObject["AI"]}</span></div>
+    //     </div>
+    //   </div>
+    // `;
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
         <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-          <div id="solution"><span class="text-sm">${responseObject["AI"]}</span></div>
+          <div id="solution"><span class="text-sm">Loading... </span></div>
         </div>
       </div>
     `;
@@ -153,8 +185,64 @@ const handleKeyDown = async (event) => {
     // Insert the container above the 'chatbox' element
     chatbox.parentNode.insertBefore(container, chatbox);
 
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    message = questionInput
+    // Send a request to the Flask server with the user's message
+    const response = await fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
+      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+
+    });
+
+    // Create a new TextDecoder to decode the streamed response text
+    const decoder = new TextDecoder();
+
+    // Set up a new ReadableStream to read the response body
+    const reader = response.body.getReader();
+    let chunks = "";
+
+    // Read the response stream as chunks and append them to the chat log
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks += decoder.decode(value);
+      // solution
+      const soln = document.getElementById('solution');
+      soln.innerHTML = chunks;
+    }
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    // Create a new TextDecoder to decode the streamed response text
+    // const decoder = new TextDecoder();
+
+    // // Set up a new ReadableStream to read the response body
+    // const reader = response.body.getReader();
+    // let chunks = "";
+
+    // // Read the response stream as chunks and append them to the chat log
+    // while (true) {
+    //   const { done, value } = await reader.read();
+    //   if (done) break;
+    //   chunks += decoder.decode(value);
+    //   box2.innerHTML = chunks;
+    // }
+
     // Prevent the default behavior (new line in contenteditable)
     event.preventDefault();
+
   }
 };
 
@@ -1102,21 +1190,21 @@ window.addEventListener('beforeunload', function (event) {
 
 function toggleDivVisibility() {
   const menuDiv = document.getElementById('menu');
-  
+
   // Check the current state
   const currentState = menuDiv.getAttribute('data-headlessui-state');
-  
+
   // Toggle the visibility and apply animation
   if (currentState === 'closed') {
-      // Show the div with animation
-      menuDiv.style.opacity = '1';
-      menuDiv.style.transform = 'translateY(0)';
-      menuDiv.setAttribute('data-headlessui-state', 'open');
+    // Show the div with animation
+    menuDiv.style.opacity = '1';
+    menuDiv.style.transform = 'translateY(0)';
+    menuDiv.setAttribute('data-headlessui-state', 'open');
   } else {
-      // Hide the div with animation
-      menuDiv.style.opacity = '0';
-      menuDiv.style.transform = 'translateY(-100%)';
-      menuDiv.setAttribute('data-headlessui-state', 'closed');
+    // Hide the div with animation
+    menuDiv.style.opacity = '0';
+    menuDiv.style.transform = 'translateY(-100%)';
+    menuDiv.setAttribute('data-headlessui-state', 'closed');
   }
 }
 

@@ -3,7 +3,7 @@ import markdown
 
 import requests
 from bson import ObjectId
-from flask import Flask, render_template, jsonify, request, session
+from flask import Flask, render_template, jsonify, request, session, Response
 from flask_pymongo import PyMongo
 import openai
 
@@ -92,7 +92,54 @@ def home():
 
 
 @app.route("/api", methods=["GET", "POST"])
-def qa():
+def chat2():
+    host="54.174.77.47"
+    # host ="localhost:8000"
+    api_url = f"http://{host}/api/v1/chat/2"
+    
+    if request.method == 'POST':          
+        print('Entered POST...')
+        print(request.json)
+        messages = request.json['messages']
+        prompt_data = messages[0]
+
+        try:
+            response = requests.post(
+                api_url,
+                json=prompt_data,
+                stream=True,
+                headers={"accept": "application/json"},
+            )
+
+            if response.status_code == 200:
+                print('Returned 200 ...')
+                def event_stream():
+                    print('Entered event_stream...')
+                    for chunk in response.iter_content():
+                        if chunk:
+                            try:
+                                print(str(chunk, encoding="utf-8"), end="")
+                                # return str(chunk, encoding="utf-8")
+                                line = str(chunk, encoding="utf-8")
+                                text = line
+                                if len(text): 
+                                    yield text
+                                    
+                            except Exception as e:
+                                print(e)
+                return Response(event_stream(), mimetype='text/event-stream')         
+            else:
+                print(f"Error: {response.status_code}\n{response.text}")
+                return (f"Error: {response.status_code}\n{response.text}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+
+    return 'Nothing...'        
+       
+
+@app.route("/api2", methods=["GET", "POST"])
+def qaddd():
     results = ''
     # print("API :::::")
     url = "http://54.174.77.47/api/v1/chat"

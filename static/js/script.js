@@ -58,11 +58,12 @@ async function postData(url = "", data = {}) {
 
 const handleKeyDown = async (event) => {
 
-  
+
 
   // if (event.ctrlKey && event.key === 'Enter') {
   if (event.shiftKey && event.key === 'Enter') {
     console.log('Shift + Enter pressed');
+    return;
   }
 
   if (event.key === 'Enter') {
@@ -169,6 +170,16 @@ const handleKeyDown = async (event) => {
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
           <div id="solution"><span class="text-sm">Loading... </span></div>
         </div>
+        <br>
+
+        <div class="svg-container flex">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-md api-svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 2.5C5.05228 2.5 5.5 2.94772 5.5 3.5V5.07196C7.19872 3.47759 9.48483 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C7.1307 21.5 3.11828 17.8375 2.565 13.1164C2.50071 12.5679 2.89327 12.0711 3.4418 12.0068C3.99033 11.9425 4.48712 12.3351 4.5514 12.8836C4.98798 16.6089 8.15708 19.5 12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.7796 4.5 7.7836 5.46469 6.40954 7H9C9.55228 7 10 7.44772 10 8C10 8.55228 9.55228 9 9 9H4.5C3.96064 9 3.52101 8.57299 3.50073 8.03859C3.49983 8.01771 3.49958 7.99677 3.5 7.9758V3.5C3.5 2.94772 3.94771 2.5 4.5 2.5Z" fill="currentColor"></path>
+          </svg>  
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-md copy-svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4C10.8954 4 10 4.89543 10 6H14C14 4.89543 13.1046 4 12 4ZM8.53513 4C9.22675 2.8044 10.5194 2 12 2C13.4806 2 14.7733 2.8044 15.4649 4H17C18.6569 4 20 5.34315 20 7V19C20 20.6569 18.6569 22 17 22H7C5.34315 22 4 20.6569 4 19V7C4 5.34315 5.34315 4 7 4H8.53513ZM8 6H7C6.44772 6 6 6.44772 6 7V19C6 19.5523 6.44772 20 7 20H17C17.5523 20 18 19.5523 18 19V7C18 6.44772 17.5523 6 17 6H16C16 7.10457 15.1046 8 14 8H10C8.89543 8 8 7.10457 8 6Z" fill="currentColor"></path>
+          </svg>
+        </div>
       </div>
     `;
 
@@ -268,21 +279,18 @@ const handleKeyDown2 = async (event) => {
       "use_history": true
     };
 
-    // Get the answer and populate it! 
-    let allresults = await postData("/api", params)
-
     // Log allresults to understand its structure
     //console.log("API Response:", allresults)
 
     //console.dir(allresults)
 
-    let responseObject = allresults
+    // let responseObject = allresults
 
     // Get an array of keys
-    const keysArray = Object.keys(responseObject);
+    // const keysArray = Object.keys(responseObject);
 
     // Get an array of values
-    const valuesArray = Object.values(responseObject);
+    // const valuesArray = Object.values(responseObject);
 
     // Output the arrays
     //console.log('Keys:', keysArray);
@@ -295,6 +303,7 @@ const handleKeyDown2 = async (event) => {
     //console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
 
 
+
     // Create the first instance
     let box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
@@ -302,9 +311,28 @@ const handleKeyDown2 = async (event) => {
    <img class="w-9 ml-4" src="static/Images/user.png" alt="">
    <div class="flex space-y-4 flex-col">
       <div id="question_"><span class="text-sm"><b>You</b></span></div>
-      <div id="question2"><span class="text-sm">${responseObject["Human"]}</span></div>
+      <div id="question2"><span class="text-sm">${questionInput}</span></div>
    </div>         
 `;
+
+
+
+    // Get all div elements on the page
+    var allDivs = document.getElementsByTagName('div');
+
+    // Initialize a counter for divs with id containing "solution"
+    var solutionDivCount = 0;
+
+    // Loop through all div elements
+    for (var i = 0; i < allDivs.length; i++) {
+      // Check if the current div's id contains the string "solution"
+      if (allDivs[i].id && allDivs[i].id.indexOf('solution') !== -1) {
+        solutionDivCount++;
+      }
+    }
+
+    // Display the total count
+    console.log('Total number of divs with id containing "solution":', solutionDivCount);
 
 
 
@@ -316,7 +344,7 @@ const handleKeyDown2 = async (event) => {
      <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
      <div class="flex space-y-4 flex-col">
        <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-       <div id="solution"><span class="text-sm">${responseObject["AI"]}</span></div>
+       <div id=${"solution" + solutionDivCount.toString()}><span class="text-sm">Loading... </span></div>
        <br>
 
       <div class="svg-container flex">
@@ -329,11 +357,7 @@ const handleKeyDown2 = async (event) => {
       </div>
 
      </div>
-   </div>
-   
-   
-    
-    
+   </div>              
 `;
 
 
@@ -345,7 +369,7 @@ const handleKeyDown2 = async (event) => {
       // console.log('Copying:', solutionText);
 
 
-      const solutionText = box2.querySelector('#solution').textContent;
+      const solutionText = box2.querySelector('#solution' + solutionDivCount.toString()).textContent;
 
       // Copy text to clipboard
       navigator.clipboard.writeText(solutionText)
@@ -384,6 +408,39 @@ const handleKeyDown2 = async (event) => {
 
     // await new Promise(resolve => setTimeout(resolve, 1000));
     // Prevent the default behavior (new line in contenteditable)  
+
+    //////////////////////////////////////////////////////////////////////////////////
+    message = questionInput
+    // Send a request to the Flask server with the user's message
+    const response = await fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
+      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+
+    });
+
+    // Create a new TextDecoder to decode the streamed response text
+    const decoder = new TextDecoder();
+
+    // Set up a new ReadableStream to read the response body
+    const reader = response.body.getReader();
+    let chunks = "";
+
+    // Read the response stream as chunks and append them to the chat log
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks += decoder.decode(value);
+      // solution
+      const soln = document.getElementById("solution" + solutionDivCount.toString());
+      soln.innerHTML = chunks;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
 
     event.preventDefault();
     // }

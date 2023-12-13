@@ -28,6 +28,7 @@ keys = ['about_cyphercrescent', 'our_team', 'our_commitment', 'our_clients',
 
 @app.route("/")
 def home():    
+    
     url = "http://54.174.77.47/api/v1/chat"
     i = str(1)
     url = "http://54.174.77.47/api/v1/conversations/user/" + i

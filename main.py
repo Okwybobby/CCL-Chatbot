@@ -172,6 +172,43 @@ def qaddd():
 
     return jsonify(results)
 
+@app.route("/proposal", methods=["GET", "POST"])
+def getproposal():
+    url = "http://54.174.77.47/api/v1/generate/proposal/2"
+    chat_box = ""
+    if request.method == "POST":
+        # print(request.json)
+        # section_ids = request.json.get("sections")
+        # print(section_ids)        
+
+        headers = {
+        "Content-Type": "application/json",
+        }
+        # data = request.json['context']
+        data = request.json
+        print('data....', data)
+
+        response = requests.post(url, json=data, headers=headers)
+
+        
+
+        if response.status_code == 200:
+
+            # print(response.json())
+            print('response ......')
+            print(response.text )
+            # Request was successful
+            # response_json = response.json().get("text")
+            response_json = response.text
+            return jsonify(response_json)
+        else:
+            # Request failed
+            print(f"Error: {response.status_code} - {response.text}")                
+
+    # data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
+    return jsonify("Nothing...")
+
+
 
 @app.route("/next", methods=["GET", "POST"])
 def getnext():

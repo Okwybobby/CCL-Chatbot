@@ -168,8 +168,7 @@ const handleKeyDown = async (event) => {
         <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-          <div id="solution"><span class="text-sm">Loading... </span></div>
-        </div>
+          <div id="solution"><span class="text-sm">Loading... </span></div>        
         <br>
 
         <div class="svg-container flex">
@@ -181,7 +180,38 @@ const handleKeyDown = async (event) => {
           </svg>
         </div>
       </div>
+      </div>
     `;
+
+
+    // Add click event for the copy-svg icon
+    box2.querySelector('.copy-svg').addEventListener('click', function () {
+      // const solutionText = box2.querySelector('#solution').textContent;
+      // Use the solutionText as needed, e.g., copy to clipboard
+      // console.log('Copying:', solutionText);
+
+
+      const solutionText = box2.querySelector('#solution').textContent;
+
+      // Copy text to clipboard
+      navigator.clipboard.writeText(solutionText)
+        .then(() => {
+          console.log('Text copied to clipboard:', solutionText);
+          // You can add further handling or UI updates here if needed
+        })
+        .catch(err => {
+          console.error('Unable to copy text to clipboard:', err);
+          // Handle errors or show a message to the user
+        });
+
+
+    });
+
+    // Add click event for the api-svg icon
+    box2.querySelector('.api-svg').addEventListener('click', function () {
+      // Call your API here
+      console.log('Calling API');
+    });
 
     // Append both instances to the container
     container.appendChild(box1);
@@ -538,11 +568,13 @@ const handleKeyDown_proposal = async (event) => {
 
     const elementToRemove = "default-checkbox";
     const indexToRemove = checkedIds.indexOf(elementToRemove);
+    console.dir('checkedIds')
+    console.dir(checkedIds)
 
     if (indexToRemove !== -1) {
       checkedIds.splice(indexToRemove, 1);
       //console.log(`Removed "${elementToRemove}" from the array.`);
-      //console.dir(checkedIds)
+     
     } else {
       console.log(`"${elementToRemove}" not found in the array.`);
     }
@@ -554,7 +586,21 @@ const handleKeyDown_proposal = async (event) => {
     // 10  - executive_summary
 
     let string_input = "\n based on this text input, "
-    const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
+    // const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
+    const searchStrings = [
+      "about_cyphercrescent",
+      "our_team",
+      "our_commitment",
+      "our_clients",
+      "overview_template",
+      "introduction",
+      "problems",
+      "proposed_solution",
+      "importance",
+      "benefits",
+      "executive_summary"
+    ]
+    // const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
     const searchStrings_index = [4, 5, 6, 10];
 
     questionInput = document.getElementById("questionInput_proposal").innerText;
@@ -568,32 +614,31 @@ const handleKeyDown_proposal = async (event) => {
 
     for (const searchString of checkedIds) {
       let indexIds = searchStrings.indexOf(searchString)
-      if (indexIds == 0) {
+      // if (indexIds == 0) {
         //console.log(`${searchString} found in the array`);
-        string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
+        // string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
 
         // Parameters
         let params = {
-          "sender_id": "11112222",
-          "conversation_id": "1",
-          "prompt": string_input,
-          "use_history": true
+          "section_id": indexIds,
+          "template_index": 0,
+          "context": questionInput
         };
 
 
-        let allresults = await postData("/api", params)
+        let allresults = await postData("/proposal", params)
 
         // Log allresults to understand its structure
-        //console.log("API Response:", allresults)
-        //console.dir(allresults)
+        console.log("Proposal API Response:", allresults)
+        console.dir(allresults)
 
         let responseObject = allresults
 
         // Get an array of keys
-        const keysArray = Object.keys(responseObject);
+        // const keysArray = Object.keys(responseObject);
 
         // Get an array of values
-        const valuesArray = Object.values(responseObject);
+        // const valuesArray = Object.values(responseObject);
 
         // Output the arrays
         //console.log('Keys:', keysArray);
@@ -601,17 +646,15 @@ const handleKeyDown_proposal = async (event) => {
 
 
         for (let key in responseObject) {
-
-          // console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
-          //console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
           allresultsArray.push(responseObject[key])
         }
-      } else {
-        //console.log(`${searchString} not found in the array`);
-        allresults = await postData("/next", { "sections": checkedIds })
-        // break;      
-        allresultsArray.push(...allresults)
-      }
+      // } 
+      
+      // else {
+      //   allresults = await postData("/next", { "sections": checkedIds })
+      //   // break;      
+      //   allresultsArray.push(...allresults)
+      // }
 
 
     }
@@ -1066,8 +1109,8 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
   // Get the ids of checked checkboxes
   const checkedIds = checkedCheckboxes.map(checkbox => checkbox.id);
 
-  //console.log('CheckIds: ')
-  //console.dir(checkedIds)
+  console.log('CheckIds: ')
+  console.dir(checkedIds)
 
 
   const elementToRemove = "default-checkbox";
@@ -1092,7 +1135,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
   const searchStrings_index = [4, 5, 6, 10];
 
   questionInput = document.getElementById("questionInput_proposal").innerText;
-  //console.log("Clicked sendButton!!!", questionInput)
+  console.log("Clicked sendButton!!!", questionInput)
 
   document.getElementById("questionInput_proposal").innerText = "";
 
@@ -1104,7 +1147,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     // if (checkedIds.includes(searchString)) {
     let indexIds = searchStrings.indexOf(searchString)
     if (indexIds == 0) {
-      //console.log(`${searchString} found in the array`);
+      console.log(`${searchString} found in the array`);
       string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
 
       // Parameters
@@ -1137,8 +1180,8 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
 
       for (let key in responseObject) {
 
-        // console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
-        //console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
+        console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
+        console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
         allresultsArray.push(responseObject[key])
       }
     } else {

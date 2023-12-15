@@ -574,7 +574,7 @@ const handleKeyDown_proposal = async (event) => {
     if (indexToRemove !== -1) {
       checkedIds.splice(indexToRemove, 1);
       //console.log(`Removed "${elementToRemove}" from the array.`);
-     
+
     } else {
       console.log(`"${elementToRemove}" not found in the array.`);
     }
@@ -610,46 +610,43 @@ const handleKeyDown_proposal = async (event) => {
 
     allresultsArray = []
 
+    let allresults = ""
+
     // const index = myArray.indexOf(searchText);
 
     for (const searchString of checkedIds) {
       let indexIds = searchStrings.indexOf(searchString)
       // if (indexIds == 0) {
-        //console.log(`${searchString} found in the array`);
-        // string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
+      //console.log(`${searchString} found in the array`);
+      // string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
 
-        // Parameters
-        let params = {
-          "section_id": indexIds,
-          "template_index": 0,
-          "context": questionInput
-        };
-
-
-        let allresults = await postData("/proposal", params)
-
-        // Log allresults to understand its structure
-        console.log("Proposal API Response:", allresults)
-        console.dir(allresults)
-
-        let responseObject = allresults
-
-        // Get an array of keys
-        // const keysArray = Object.keys(responseObject);
-
-        // Get an array of values
-        // const valuesArray = Object.values(responseObject);
-
-        // Output the arrays
-        //console.log('Keys:', keysArray);
-        //console.log('Values:', valuesArray);
+      // Parameters
+      let params = {
+        "section_id": indexIds,
+        "template_index": 0,
+        "context": questionInput
+      };
 
 
-        for (let key in responseObject) {
-          allresultsArray.push(responseObject[key])
-        }
+      allresults = allresults + '<br><br>' + await postData("/proposal", params)
+
+
+      // Get an array of keys
+      // const keysArray = Object.keys(responseObject);
+
+      // Get an array of values
+      // const valuesArray = Object.values(responseObject);
+
+      // Output the arrays
+      //console.log('Keys:', keysArray);
+      //console.log('Values:', valuesArray);
+
+
+      // for (let key in responseObject) {
+      //   allresultsArray.push(responseObject[key])
+      // }
       // } 
-      
+
       // else {
       //   allresults = await postData("/next", { "sections": checkedIds })
       //   // break;      
@@ -658,6 +655,10 @@ const handleKeyDown_proposal = async (event) => {
 
 
     }
+
+    // Log allresults to understand its structure
+    console.log("Proposal API Response:", allresults)
+    console.dir(allresults)
 
     //console.log('allresultsArray:.......')
     //console.log(allresultsArray)
@@ -668,51 +669,51 @@ const handleKeyDown_proposal = async (event) => {
 
     let isFirstIteration = true;
     // Loop through 'allresults' array and create instances dynamically
-    allresults.forEach(res => {
+    // allresults.forEach(res => {
 
-      //console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+        //console.log(`Question: ${res.question}, Answer: ${res.answer}`);
 
-      // Create the first instance
-      const box1 = document.createElement('div');
-      box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
-      box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
-      <div id="question2"><span class="text-sm">${res.question}</span></div>
-    `;
+        // Create the first instance
+        const box1 = document.createElement('div');
+        box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+        box1.innerHTML = `
+        <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+        <div id="question2"><span class="text-sm">"dd"</span></div>
+      `;
 
-      // Create the second instance
-      const box2 = document.createElement('div');
-      box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+        // Create the second instance
+        const box2 = document.createElement('div');
+        box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
 
 
-      if (isFirstIteration) {
-        box2.innerHTML = `
-      <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
-        <div class="flex space-y-4 flex-col">
-          <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-          <div id="solution"><span class="text-sm">${res.answer}</span></div>
+      //   if (isFirstIteration) {
+      //     box2.innerHTML = `
+      //   <div class="box w-[35vw] flex justify-start space-x-6">
+      //     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+      //     <div class="flex space-y-4 flex-col">
+      //       <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
+      //       <div id="solution"><span class="text-sm">${allresults}</span></div>
+      //     </div>
+      //   </div>
+      // `;
+      //     isFirstIteration = false;
+      //   } else {
+          box2.innerHTML = `
+        <div class="box w-[35vw] flex justify-start space-x-6">
+          <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+          <div class="flex space-y-4 flex-col space-x-96 ">          
+            <div id="solution"><span class="text-sm">${allresults}</span></div>
+          </div>
         </div>
-      </div>
-    `;
-        isFirstIteration = false;
-      } else {
-        box2.innerHTML = `
-      <div class="box w-[35vw] flex justify-start space-x-6">
-        <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-        <div class="flex space-y-4 flex-col space-x-96 ">          
-          <div id="solution"><span class="text-sm">${res.answer}</span></div>
-        </div>
-      </div>
-    `;
-      }
+      `;
+        // }
 
 
 
 
-      // Append both instances to the container      
-      container.appendChild(box2);
-    });
+        // Append both instances to the container      
+        container.appendChild(box2);
+    // });
 
 
     // Get the existing element with id 'chatbox'

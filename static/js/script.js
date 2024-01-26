@@ -37,6 +37,146 @@ if (nda_answers_raw) {
 let nda_index = parseInt(localStorage.getItem('nda_index')) || 0;
 
 
+
+
+const sendButton = document.getElementById('sendButton_proposal');
+
+// Attach click event listener to the button
+sendButton.addEventListener('click', function () {
+
+  // console.log('Sending message:')
+  // alert('EEEE')                
+
+
+  (async () => {
+    // Select all checkboxes
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    // Filter out checked checkboxes
+    const checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+
+    // Get the ids of checked checkboxes
+    const checkedIds = checkedCheckboxes.map(checkbox => checkbox.id);
+
+    //console.log('CheckIds: ')
+    //console.dir(checkedIds)
+
+
+    const elementToRemove = "default-checkbox";
+    const indexToRemove = checkedIds.indexOf(elementToRemove);
+    console.dir('checkedIds')
+    console.dir(checkedIds)
+
+    if (indexToRemove !== -1) {
+      checkedIds.splice(indexToRemove, 1);
+      //console.log(`Removed "${elementToRemove}" from the array.`);
+
+    } else {
+      console.log(`"${elementToRemove}" not found in the array.`);
+    }
+
+
+    // 4  - overview_template
+    // 5  - introduction
+    // 6  - problems
+    // 10  - executive_summary
+
+    let string_input = "\n based on this text input, "
+    // const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
+    const searchStrings = [
+      "about_cyphercrescent",
+      "our_team",
+      "our_commitment",
+      "our_clients",
+      "overview_template",
+      "introduction",
+      "problems",
+      "proposed_solution",
+      "importance",
+      "benefits",
+      "executive_summary"
+    ]
+    // const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
+    const searchStrings_index = [4, 5, 6, 10];
+
+    questionInput = document.getElementById("questionInput_proposal").innerText;
+    //console.log("Clicked sendButton!!!", questionInput)
+
+    document.getElementById("questionInput_proposal").innerText = "";
+
+    allresultsArray = []
+
+    let allresults = ""
+
+    // const index = myArray.indexOf(searchText);
+
+    for (const searchString of checkedIds) {
+      let indexIds = searchStrings.indexOf(searchString)
+      // if (indexIds == 0) {
+      //console.log(`${searchString} found in the array`);
+      // string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"
+
+      // Parameters
+      let params = {
+        "section_id": indexIds,
+        "template_index": 0,
+        "context": questionInput
+      };
+
+
+      allresults = allresults + '<br><br>' + await postData("/proposal", params)
+
+    }
+
+    // Log allresults to understand its structure
+    console.log("Proposal API Response:", allresults)
+    console.dir(allresults)
+
+    // Get the container element
+    const container = document.getElementById('container_proposal');
+
+    let isFirstIteration = true;
+    const box1 = document.createElement('div');
+    box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+    box1.innerHTML = `
+          <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+          <div id="question2"><span class="text-sm">"dd"</span></div>
+        `;
+
+    // Create the second instance
+    const box2 = document.createElement('div');
+    box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+
+    box2.innerHTML = `
+          <div class="box w-[35vw] flex justify-start space-x-6">
+            <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div class="flex space-y-4 flex-col space-x-96 ">          
+              <div id="solution"><span class="text-sm">${allresults}</span></div>
+            </div>
+          </div>
+        `;
+    // }
+
+
+
+
+    // Append both instances to the container      
+    container.appendChild(box2);
+    // });
+
+
+    // Get the existing element with id 'chatbox'
+    const chatbox = document.getElementById('next_proposal');
+
+    // Insert the container above the 'chatbox' element
+    chatbox.parentNode.insertBefore(container, chatbox);
+
+  })();
+
+});
+
+
+
 async function postData(url = "", data = {}) {
   try {
     const response = await fetch(url, {
@@ -493,7 +633,7 @@ const handleKeyDown_letter = async (event) => {
     document.getElementById("questionInput_letter").innerText = "";
 
     // Get the answer and populate it! 
-    let allresults = await postData("/letter", { "context": questionInput })
+    // let allresults = await postData("/letter", { "context": questionInput })
 
     // Log allresults to understand its structure
     //console.log("API Response:", allresults)
@@ -519,7 +659,7 @@ const handleKeyDown_letter = async (event) => {
         <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
-          <div id="solution"><span class="text-sm">${allresults}</span></div>
+          <div id="solution"><span class="text-sm">Loading... </span></div>
         </div>
       </div>
     `;
@@ -536,10 +676,44 @@ const handleKeyDown_letter = async (event) => {
     // Insert the container above the 'chatbox' element
     chatbox.parentNode.insertBefore(container, chatbox);
 
+
+    message = questionInput
+    // Send a request to the Flask server with the user's message
+    const response = await fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
+      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+
+    });
+
+
+    // Create a new TextDecoder to decode the streamed response text
+    const decoder = new TextDecoder();
+
+    // Set up a new ReadableStream to read the response body
+    const reader = response.body.getReader();
+    let chunks = "";
+
+    // Read the response stream as chunks and append them to the chat log
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks += decoder.decode(value);
+      // solution
+      const soln = document.getElementById('solution');
+      soln.innerHTML = chunks;
+    }
+
     // Prevent the default behavior (new line in contenteditable)
     event.preventDefault();
   }
 };
+
+
+
 
 
 const handleKeyDown_proposal = async (event) => {
@@ -628,8 +802,11 @@ const handleKeyDown_proposal = async (event) => {
       };
 
 
-      allresults = allresults + '<br><br>' + await postData("/proposal", params)
+      // // allresults = allresults + '<br><br>' + await postData("/proposal", params)
 
+
+
+      
 
       // Get an array of keys
       // const keysArray = Object.keys(responseObject);
@@ -671,48 +848,48 @@ const handleKeyDown_proposal = async (event) => {
     // Loop through 'allresults' array and create instances dynamically
     // allresults.forEach(res => {
 
-        //console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+    //console.log(`Question: ${res.question}, Answer: ${res.answer}`);
 
-        // Create the first instance
-        const box1 = document.createElement('div');
-        box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
-        box1.innerHTML = `
+    // Create the first instance
+    const box1 = document.createElement('div');
+    box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+    box1.innerHTML = `
         <img class="w-9 ml-4" src="static/Images/user.png" alt="">
         <div id="question2"><span class="text-sm">"dd"</span></div>
       `;
 
-        // Create the second instance
-        const box2 = document.createElement('div');
-        box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+    // Create the second instance
+    const box2 = document.createElement('div');
+    box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
 
 
-      //   if (isFirstIteration) {
-      //     box2.innerHTML = `
-      //   <div class="box w-[35vw] flex justify-start space-x-6">
-      //     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
-      //     <div class="flex space-y-4 flex-col">
-      //       <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-      //       <div id="solution"><span class="text-sm">${allresults}</span></div>
-      //     </div>
-      //   </div>
-      // `;
-      //     isFirstIteration = false;
-      //   } else {
-          box2.innerHTML = `
+    //   if (isFirstIteration) {
+    //     box2.innerHTML = `
+    //   <div class="box w-[35vw] flex justify-start space-x-6">
+    //     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+    //     <div class="flex space-y-4 flex-col">
+    //       <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
+    //       <div id="solution"><span class="text-sm">${allresults}</span></div>
+    //     </div>
+    //   </div>
+    // `;
+    //     isFirstIteration = false;
+    //   } else {
+    box2.innerHTML = `
         <div class="box w-[35vw] flex justify-start space-x-6">
           <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
           <div class="flex space-y-4 flex-col space-x-96 ">          
-            <div id="solution"><span class="text-sm">${allresults}</span></div>
+            <div id="solution"><span class="text-sm">Loading... </span></div>
           </div>
         </div>
       `;
-        // }
+    // }
 
 
 
 
-        // Append both instances to the container      
-        container.appendChild(box2);
+    // Append both instances to the container      
+    container.appendChild(box2);
     // });
 
 
@@ -721,6 +898,41 @@ const handleKeyDown_proposal = async (event) => {
 
     // Insert the container above the 'chatbox' element
     chatbox.parentNode.insertBefore(container, chatbox);
+
+
+    message = questionInput
+      // Send a request to the Flask server with the user's message
+      const response = await fetch("/api", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
+        body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+
+      });
+
+      // Create a new TextDecoder to decode the streamed response text
+      const decoder = new TextDecoder();
+
+      // Set up a new ReadableStream to read the response body
+      const reader = response.body.getReader();
+      let chunks = "";
+
+      // Read the response stream as chunks and append them to the chat log
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks += decoder.decode(value);
+        // solution
+        const soln = document.getElementById('solution');
+        soln.innerHTML += chunks;
+        // allresults = allresults + '<br><br>' + await postData("/proposal", params)
+      }
+
+      event.preventDefault();
+
+
   }
 
 }
@@ -814,14 +1026,14 @@ const handleKeyDown_nda = async (event) => {
 
     chatbox2.parentNode.insertBefore(container, chatbox2);
 
-    //console.log('ALL_ANSWERS:>>>')
-    //console.log(nda_answers)
+    console.log('ALL_ANSWERS:>>>')
+    console.log(nda_answers)
 
-    //console.log('NDA_QUESTIONS::::', nda_questions[nda_index])
+    console.log('NDA_QUESTIONS::::', nda_questions[nda_index])
 
     if (nda_index == 5) {
-      //console.log('nda_answers:::>>>>>')
-      //console.log(nda_answers)
+      console.log('nda_answers:::>>>>>')
+      console.log(nda_answers)
 
       let allresults = await postData("/nda", { "answers": nda_answers })
       //console.log(allresults)

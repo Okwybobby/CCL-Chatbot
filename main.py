@@ -96,7 +96,8 @@ def home():
 def chat2():
     host="54.174.77.47"
     # host ="localhost:8000"
-    api_url = f"http://{host}/api/v1/chat/2"
+    # api_url = f"http://{host}/api/v1/chat/stream"
+    api_url = f"http://{host}/api/v1/chat/stream"
     
     if request.method == 'POST':          
         print('Entered POST...')
@@ -174,7 +175,7 @@ def qaddd():
 
 @app.route("/proposal", methods=["GET", "POST"])
 def getproposal():
-    url = "http://54.174.77.47/api/v1/generate/proposal/2"
+    url = "http://54.174.77.47/api/v1/generate/proposal/stream"
     chat_box = ""
     if request.method == "POST":
         # print(request.json)
@@ -188,25 +189,63 @@ def getproposal():
         data = request.json
         print('data....', data)
 
-        response = requests.post(url, json=data, headers=headers)
+
+        try:
+            response = requests.post(
+                url,
+                json=data,
+                stream=True,
+                headers={"Content-Type": "application/json"},
+            )
+
+
+        # response = requests.post(url, json=data, headers=headers)
 
         
 
-        if response.status_code == 200:
+            if response.status_code == 200:
 
-            # print(response.json())
-            print('response ......')
-            print(response.text )
-            # Request was successful
-            # response_json = response.json().get("text")
-            response_json = response.text
-            return jsonify(response_json)
-        else:
-            # Request failed
-            print(f"Error: {response.status_code} - {response.text}")                
+                print('Returned 200 ...')
+                # print(response.json())
+                # print('response ......')
+                # print(response.text )
+                # Request was successful
 
-    # data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
-    return jsonify("Nothing...")
+                def event_stream():
+                    print('Entered event_stream...')
+                    for chunk in response.iter_content():
+                        if chunk:
+                            try:
+                                print(str(chunk, encoding="utf-8"), end="")
+                                # return str(chunk, encoding="utf-8")
+                                line = str(chunk, encoding="utf-8")
+                                text = line
+                                if len(text): 
+                                    yield text
+                                        
+                            except Exception as e:
+                                    print(e)
+                return Response(event_stream(), mimetype='text/event-stream')         
+            else:
+                print(f"Error: {response.status_code}\n{response.text}")
+                return (f"Error: {response.status_code}\n{response.text}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+    return 'Request failed...'
+
+
+
+
+###############################
+    #         response_json = response.text
+    #         return jsonify(response_json)
+    #     else:
+    #         # Request failed
+    #         print(f"Error: {response.status_code} - {response.text}")                
+
+    # # data = {"result": "Thank you! I'm just a machine learning model designed to respond to questions and generate text based on my training data. Is there anything specific you'd like to ask or discuss? "}
+    # return jsonify("Nothing...")
 
 
 
@@ -285,38 +324,90 @@ def getnext():
 
 @app.route("/letter", methods=["GET", "POST"])
 def qletter():
-    # print("HEEEELLLLLLOOOOOO")
-    if request.method == "POST":
-        # print(request.json)
-        # response_json = request.json.get("context")
+    host="54.174.77.47"
+    # host ="localhost:8000"   
 
-        url = "http://54.174.77.47/api/v1/letter"
-
-        headers = {
-        "Content-Type": "application/json",
-        }
-        # data = request.json['context']
+    api_url = f"http://{host}/api/v1/letter/stream"
+    
+    if request.method == 'POST':          
+        print('Entered POST...')
+        print(request.json)
+        # messages = request.json['messages']
         data = request.json
-        response = requests.post(url, json=data, headers=headers)
+        prompt_data = messages[0]
 
-        if response.status_code == 200:
+        prompt_data = {
+            "context": data
+        }
 
-            # print(response.json())
-            # Request was successful
-            response_json = response.json().get("text")
-            return jsonify(response_json)
-        else:
-            # Request failed
-            print(f"Error: {response.status_code} - {response.text}")
+        try:
+            response = requests.post(
+                api_url,
+                json=prompt_data,
+                stream=True,
+                headers={"accept": "application/json"},
+            )
+
+            if response.status_code == 200:
+                print('Returned 200 ...')
+                def event_stream():
+                    print('Entered event_stream...')
+                    for chunk in response.iter_content():
+                        if chunk:
+                            try:
+                                print(str(chunk, encoding="utf-8"), end="")
+                                # return str(chunk, encoding="utf-8")
+                                line = str(chunk, encoding="utf-8")
+                                text = line
+                                if len(text): 
+                                    yield text
+                                    
+                            except Exception as e:
+                                print(e)
+                return Response(event_stream(), mimetype='text/event-stream')         
+            else:
+                print(f"Error: {response.status_code}\n{response.text}")
+                return (f"Error: {response.status_code}\n{response.text}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+
+    return 'Nothing...'        
+      
+
+# def qletter():
+#     # print("HEEEELLLLLLOOOOOO")
+#     if request.method == "POST":
+#         # print(request.json)
+#         # response_json = request.json.get("context")
+
+#         url = "http://54.174.77.47/api/v1/letter"
+
+#         headers = {
+#         "Content-Type": "application/json",
+#         }
+#         # data = request.json['context']
+#         data = request.json
+#         response = requests.post(url, json=data, headers=headers)
+
+#         if response.status_code == 200:
+
+#             # print(response.json())
+#             # Request was successful
+#             response_json = response.json().get("text")
+#             return jsonify(response_json)
+#         else:
+#             # Request failed
+#             print(f"Error: {response.status_code} - {response.text}")
 
     
-    return jsonify('no results')
+#     return jsonify('no results')
 
 
 @app.route("/nda", methods=["GET", "POST"])
 def qnda():
-    # print("HEEEELLLLLLOOOOOO")
-    url = 'http://54.174.77.47/api/v1/NDA/generate'
+    print("HEEEELLLLLLOOOOOO")
+    url = 'http://54.174.77.47/api/v1/NDA/generate/stream'
     chat_box = ""
     preview_sections = []
 
@@ -332,13 +423,14 @@ def qnda():
             "Content-Type": "application/json",
         }
 
-        # print('nda_question_list....:::', data)
+        print('nda_answer_list....:::', data)
         response = requests.post(url, json=data, headers=headers)
         # Check the response
         if response.status_code == 200:
 
-            # print('Success!')
+            print('Success!')
             # print(response.json())
+            print(response)
             response_json = response.json().get("NDA")                        
             return jsonify(response_json)
         else:
@@ -350,4 +442,4 @@ def qnda():
 
 port = int(os.environ.get('PORT', 5001))
 
-# app.run(debug=True)
+app.run(debug=True)

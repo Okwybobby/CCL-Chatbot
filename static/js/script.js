@@ -393,6 +393,8 @@ const handleKeyDown = async (event) => {
       const { done, value } = await reader.read();
       if (done) break;
       chunks += decoder.decode(value);
+
+      chunks = chunks.replace('\n', '<br>');
       // solution
       const soln = document.getElementById('solution');
       soln.innerHTML = chunks;
@@ -604,6 +606,8 @@ const handleKeyDown2 = async (event) => {
       const { done, value } = await reader.read();
       if (done) break;
       chunks += decoder.decode(value);
+
+      chunks = chunks.replace('\n', '<br>');
       // solution
       const soln = document.getElementById("solution" + solutionDivCount.toString());
       soln.innerHTML = chunks;
@@ -703,6 +707,24 @@ const handleKeyDown_letter = async (event) => {
       if (done) break;
       chunks += decoder.decode(value);
       // solution
+
+      // Split the chunks by newline characters
+      // chunks = chunks.split('\n');
+
+      // Replace '\n' with '<br>' in the chunks
+      chunks = chunks.replace('\n', '<br>');
+
+      // Append each line with appropriate HTML formatting
+      // for (let i = 0; i < lines.length - 1; i++) {
+      //   const line = lines[i];
+      //   const p = document.createElement('p');
+      //   p.textContent = line;
+      //   soln.appendChild(p);
+      // }
+
+      // Update chunks with the last incomplete line
+      // chunks = lines[lines.length - 1];
+
       const soln = document.getElementById('solution');
       soln.innerHTML = chunks;
     }
@@ -806,7 +828,7 @@ const handleKeyDown_proposal = async (event) => {
 
 
 
-      
+
 
       // Get an array of keys
       // const keysArray = Object.keys(responseObject);
@@ -901,36 +923,39 @@ const handleKeyDown_proposal = async (event) => {
 
 
     message = questionInput
-      // Send a request to the Flask server with the user's message
-      const response = await fetch("/api", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
-        body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+    // Send a request to the Flask server with the user's message
+    const response = await fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
+      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
 
-      });
+    });
 
-      // Create a new TextDecoder to decode the streamed response text
-      const decoder = new TextDecoder();
+    // Create a new TextDecoder to decode the streamed response text
+    const decoder = new TextDecoder();
 
-      // Set up a new ReadableStream to read the response body
-      const reader = response.body.getReader();
-      let chunks = "";
+    // Set up a new ReadableStream to read the response body
+    const reader = response.body.getReader();
+    let chunks = "";
 
-      // Read the response stream as chunks and append them to the chat log
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks += decoder.decode(value);
-        // solution
-        const soln = document.getElementById('solution');
-        soln.innerHTML += chunks;
-        // allresults = allresults + '<br><br>' + await postData("/proposal", params)
-      }
+    // Read the response stream as chunks and append them to the chat log
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks += decoder.decode(value);
 
-      event.preventDefault();
+      chunks = chunks.replace('\n', '<br>');
+
+      // solution
+      const soln = document.getElementById('solution');
+      soln.innerHTML += chunks;
+      // allresults = allresults + '<br><br>' + await postData("/proposal", params)
+    }
+
+    event.preventDefault();
 
 
   }

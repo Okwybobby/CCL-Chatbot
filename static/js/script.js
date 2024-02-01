@@ -951,7 +951,7 @@ const handleKeyDown_proposal = async (event) => {
 
       // solution
       const soln = document.getElementById('solution');
-      soln.innerHTML += chunks;
+      soln.innerHTML = chunks;
       // allresults = allresults + '<br><br>' + await postData("/proposal", params)
     }
 

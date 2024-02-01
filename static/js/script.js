@@ -901,7 +901,7 @@ const handleKeyDown_proposal = async (event) => {
         <div class="box w-[35vw] flex justify-start space-x-6">
           <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
           <div class="flex space-y-4 flex-col space-x-96 ">          
-            <div id="solution"><span class="text-sm">Loading... </span></div>
+            <div id="solution"><span class="text-sm"> </span></div>
           </div>
         </div>
       `;

@@ -1177,6 +1177,9 @@ const handleKeyDown_proposal = async (event) => {
 
     for (const searchString of checkedIds) {
       let indexIds = searchStrings.indexOf(searchString)
+
+      chunks = chunks + '<br>'  + '<br>';   
+
       // if (indexIds == 0) {
       //console.log(`${searchString} found in the array`);
       // string_input = questionInput + ".\n based on this text input, give me a sample text that shows how a company called cyphercrescent's Cutting-Edge Production Optimization System effectively address the manufacturing efficiency challenges faced by oil companies in their quest to optimize production, and what distinguishes this solution from others in the market?"

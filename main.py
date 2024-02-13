@@ -1,5 +1,6 @@
 import os
 import markdown
+import json
 
 import requests
 from bson import ObjectId
@@ -189,6 +190,12 @@ def getproposal():
         data = request.json
         print('data....', data)
 
+        # Replace with your actual prompt
+        prompt_data = {
+        "section_id": 4,
+        "template_index": 0,
+        "context": ""
+        }
 
         try:
             response = requests.post(
@@ -424,18 +431,64 @@ def qnda():
         }
 
         print('nda_answer_list....:::', data)
-        response = requests.post(url, json=data, headers=headers)
-        # Check the response
-        if response.status_code == 200:
+        # Convert the dictionary to a string
+        # data_str = str(data)
 
-            print('Success!')
+        # Replace single quotes with double quotes
+        # data_str = data_str.replace("'", '\"')
+
+        # Convert the string back to a dictionary
+        # data = eval(data_str)
+        # data = json.dumps(data)
+
+        print('new_nda_answer_list....:::', data)
+
+        # response = requests.post(url, data=data, headers=headers)
+        # Check the response
+        # if response.status_code == 200:
+
+        #     print('Success!')
+            
+        #     print(response)
+        #     print(response.text)
             # print(response.json())
-            print(response)
-            response_json = response.json().get("NDA")                        
-            return jsonify(response_json)
-        else:
-            print('Error:', response.status_code)
-            # print(response.text)
+            # response_json = response.json().get("NDA")                        
+            # return jsonify(response_json)
+
+        try:
+            response = requests.post(
+                url,
+                json=data,
+                stream=True,
+                headers={"accept": "application/json"},
+            )
+
+            if response.status_code == 200:
+                print('Returned 200 ...')
+                def event_stream():
+                    print('Entered event_stream...')
+                    for chunk in response.iter_content():
+                        if chunk:
+                            try:
+                                # print(str(chunk, encoding="utf-8"), end="")
+                                # return str(chunk, encoding="utf-8")
+                                line = str(chunk, encoding="utf-8")
+                                text = line
+                                if len(text): 
+                                    yield text
+                                    
+                            except Exception as e:
+                                print(e)
+                return Response(event_stream(), mimetype='text/event-stream')         
+            else:
+                print(f"Error: {response.status_code}\n{response.text}")
+                return (f"Error: {response.status_code}\n{response.text}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")            
+        # else:
+        #     print('Error:', response.status_code)
+        #     print(response.text)
       
     return jsonify('an error occured')
    

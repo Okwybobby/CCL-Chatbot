@@ -840,6 +840,8 @@ const handleKeyDown_letter = async (event) => {
       <div id="question2"><span class="text-sm">${questionInput}</span></div>
     `;
 
+    let uniqueId = `solution-${Date.now()}`;
+
     // Create the second instance
     let box2 = document.createElement('div');
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
@@ -848,7 +850,7 @@ const handleKeyDown_letter = async (event) => {
         <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
-          <div id="solution"><span class="text-sm">Loading... </span></div>
+          <div id="${uniqueId}"><span class="text-sm">Loading... </span></div>
 
           <br>
 
@@ -943,7 +945,7 @@ const handleKeyDown_letter = async (event) => {
       // Update chunks with the last incomplete line
       // chunks = lines[lines.length - 1];
 
-      const soln = document.getElementById('solution');
+      const soln = document.getElementById(uniqueId);
       soln.innerHTML = chunks;
     }
 
@@ -1178,7 +1180,7 @@ const handleKeyDown_proposal = async (event) => {
     for (const searchString of checkedIds) {
       let indexIds = searchStrings.indexOf(searchString)
 
-      chunks = chunks + '<br>'  + '<br>';   
+      chunks = chunks + '<br>' + '<br>';
 
       // if (indexIds == 0) {
       //console.log(`${searchString} found in the array`);
@@ -1211,7 +1213,7 @@ const handleKeyDown_proposal = async (event) => {
 
       // Set up a new ReadableStream to read the response body
       const reader = response.body.getReader();
-      
+
 
       // Read the response stream as chunks and append them to the chat log
       while (true) {
@@ -1223,7 +1225,7 @@ const handleKeyDown_proposal = async (event) => {
 
         // solution
         const soln = document.getElementById('solution');
-        soln.innerHTML =  chunks;
+        soln.innerHTML = chunks;
         // allresults = allresults + '<br><br>' + await postData("/proposal", params)
       }
 

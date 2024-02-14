@@ -199,7 +199,7 @@ document.getElementById("sendButton").addEventListener("click", async function (
       "Content-Type": "application/json",
     },
     // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
-    body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+    body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": true }] }),
 
   });
 
@@ -567,7 +567,7 @@ const handleKeyDown = async (event) => {
         "Content-Type": "application/json",
       },
       // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
-      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": true }] }),
 
     });
 
@@ -775,7 +775,7 @@ const handleKeyDown2 = async (event) => {
         "Content-Type": "application/json",
       },
       // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
-      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": true }] }),
 
     });
 
@@ -909,7 +909,7 @@ const handleKeyDown_letter = async (event) => {
         "Content-Type": "application/json",
       },
       // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
-      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+      body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": true }] }),
 
     });
 
@@ -1204,7 +1204,7 @@ const handleKeyDown_proposal = async (event) => {
         },
         // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
         body: JSON.stringify(params),
-        // body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": false }] }),
+        // body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": true }] }),
 
       });
 

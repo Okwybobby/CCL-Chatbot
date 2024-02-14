@@ -14,7 +14,7 @@ form.addEventListener("submit", async (event) => {
       "Content-Type": "application/json",
     },
     // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
-    body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1",  "prompt": message, "use_history": false }] }),
+    body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1",  "prompt": message, "use_history": true }] }),
 
   });
 

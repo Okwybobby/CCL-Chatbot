@@ -37,12 +37,10 @@ if (nda_answers_raw) {
 let nda_index = parseInt(localStorage.getItem('nda_index')) || 0;
 
 
-document.getElementById("sendButton").addEventListener("click", async function () {
+document.getElementById("sendButton").addEventListener("click", async function (event) {
   // Call the handleKeyDown function passing the event
   console.log("Button clicked!");
   // await handleKeyDown();
-
-  console.log('Enter pressed');
   questionInput = document.getElementById("questionInput").innerText;
   //console.log("Clicked sendButton!!!", questionInput)
 
@@ -62,51 +60,21 @@ document.getElementById("sendButton").addEventListener("click", async function (
     "use_history": true
   };
 
-  // Get the answer and populate it! 
-  //////////////////// let allresults = await postData("/api", params)
-
-  // Log allresults to understand its structure
-  //console.log("API Response:", allresults)
-  //console.dir(allresults)
-
-
-  // Parse the JSON string into a JavaScript object
-  // let responseObject = allresults
-
-  // console.log('responseObject:...', responseObject)
-
-  // Get an array of keys
-  // const keysArray = Object.keys(responseObject);
-
-  // Get an array of values
-  // const valuesArray = Object.values(responseObject);
-
-  // Output the arrays
-  //console.log('Keys:', keysArray);
-  //console.log('Values:', valuesArray);
-
 
   // Get the container element
   const container = document.getElementById('container');
 
-  // Loop through 'allresults' array and create instances dynamically    
-  // for (let key in responseObject) {
-
-  // //console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
-  //console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
-  // console.dir(responseObject)
-  // Create the first instance
   const box1 = document.createElement('div');
   box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
   // box1.innerHTML = `
-  //   <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+  //   <img class="w-9 m-2" src="static/Images/user.png" alt="">
   //   <div class="flex space-y-4 flex-col">
   //     <div id="question_"><span class="text-sm"><b>You</b></span></div>
   //     <div id="question2"><span class="text-sm">${responseObject["Human"]}</span></div>
   //   </div>
   // `;
   box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <img class="w-9 m-2" src="static/Images/user.png" alt="">
       <div class="flex space-y-4 flex-col">
         <div id="question_"><span class="text-sm"><b>You</b></span></div>
         <div id="question2"><span class="text-sm">${questionInput}</span></div>
@@ -118,7 +86,7 @@ document.getElementById("sendButton").addEventListener("click", async function (
   box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
   // box2.innerHTML = `
   //   <div class="box w-[35vw] flex justify-start space-x-6">
-  //     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+  //     <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
   //     <div class="flex space-y-4 flex-col">
   //       <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
   //       <div id="solution"><span class="text-sm">${responseObject["AI"]}</span></div>
@@ -127,10 +95,10 @@ document.getElementById("sendButton").addEventListener("click", async function (
   // `;
   box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+        <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-          <div id="solution"><span class="text-sm">Loading... </span></div>        
+          <div id="solution" style="padding-right: 30px;"><span class="text-sm">Loading... </span></div>        
         <br>
 
         <div class="svg-container flex">
@@ -145,13 +113,8 @@ document.getElementById("sendButton").addEventListener("click", async function (
       </div>
     `;
 
-
   // Add click event for the copy-svg icon
   box2.querySelector('.copy-svg').addEventListener('click', function () {
-    // const solutionText = box2.querySelector('#solution').textContent;
-    // Use the solutionText as needed, e.g., copy to clipboard
-    // console.log('Copying:', solutionText);
-
 
     const solutionText = box2.querySelector('#solution').textContent;
 
@@ -165,8 +128,6 @@ document.getElementById("sendButton").addEventListener("click", async function (
         console.error('Unable to copy text to clipboard:', err);
         // Handle errors or show a message to the user
       });
-
-
   });
 
   // Add click event for the api-svg icon
@@ -178,17 +139,12 @@ document.getElementById("sendButton").addEventListener("click", async function (
   // Append both instances to the container
   container.appendChild(box1);
   container.appendChild(box2);
-  // });
-  // };
-
 
   // Get the existing element with id 'chatbox'
   const chatbox = document.getElementById('chatbox_space');
 
   // Insert the container above the 'chatbox' element
   chatbox.parentNode.insertBefore(container, chatbox);
-
-
 
   //////////////////////////////////////////////////////////////////////////////////
   message = questionInput
@@ -222,25 +178,173 @@ document.getElementById("sendButton").addEventListener("click", async function (
     soln.innerHTML = chunks;
   }
 
+  markdownText = document.getElementById("solution").innerText;
+  const htmlText = markdownToHtml(markdownText);
+  document.getElementById("solution").innerHTML = htmlText;
 
-  ///////////////////////////////////////////////////////////////////////////////////
+  event.preventDefault();
+  console.log("DONE HERE!!");
+});
 
-  // Create a new TextDecoder to decode the streamed response text
-  // const decoder = new TextDecoder();
+document.getElementById("sendButton2").addEventListener("click", async function () {
+  questionInput = document.getElementById("questionInput2").innerText;
+  //console.log("Clicked sendButton!!!", questionInput)
 
-  // // Set up a new ReadableStream to read the response body
-  // const reader = response.body.getReader();
-  // let chunks = "";
+  document.getElementById("questionInput2").innerText = "";
 
-  // // Read the response stream as chunks and append them to the chat log
-  // while (true) {
-  //   const { done, value } = await reader.read();
-  //   if (done) break;
-  //   chunks += decoder.decode(value);
-  //   box2.innerHTML = chunks;
+  // Parameters
+  let params = {
+    "sender_id": "1",
+    "conversation_id": "1",
+    "prompt": questionInput,
+    "use_history": true
+  };
+
+  // Get the container element
+  const container = document.getElementById('container');
+
+  // Create the first instance
+  let box1 = document.createElement('div');
+  box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+  box1.innerHTML = `
+      <img class="w-9 m-2" src="static/Images/user.png" alt="">
+      <div class="flex space-y-4 flex-col">
+          <div id="question_"><span class="text-sm"><b>You</b></span></div>
+          <div id="question2"><span class="text-sm">${questionInput}</span></div>
+      </div>         
+    `;
+
+
+
+  // Get all div elements on the page
+  var allDivs = document.getElementsByTagName('div');
+
+  // Initialize a counter for divs with id containing "solution"
+  var solutionDivCount = 0;
+
+  // Loop through all div elements
+  for (var i = 0; i < allDivs.length; i++) {
+    // Check if the current div's id contains the string "solution"
+    if (allDivs[i].id && allDivs[i].id.indexOf('solution') !== -1) {
+      solutionDivCount++;
+    }
+  }
+
+  // Display the total count
+  console.log('Total number of divs with id containing "solution":', solutionDivCount);
+
+
+
+  // Create the second instance
+  let box2 = document.createElement('div');
+  box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+  box2.innerHTML = `
+   <div class="box w-[35vw] flex justify-start space-x-6">
+     <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
+     <div class="flex space-y-4 flex-col">
+       <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
+       <div id=${"solution" + solutionDivCount.toString()} style="padding-right: 30px;"><span class="text-sm">Loading... </span></div>
+       <br>
+
+      <div class="svg-container flex">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-md api-svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 2.5C5.05228 2.5 5.5 2.94772 5.5 3.5V5.07196C7.19872 3.47759 9.48483 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C7.1307 21.5 3.11828 17.8375 2.565 13.1164C2.50071 12.5679 2.89327 12.0711 3.4418 12.0068C3.99033 11.9425 4.48712 12.3351 4.5514 12.8836C4.98798 16.6089 8.15708 19.5 12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.7796 4.5 7.7836 5.46469 6.40954 7H9C9.55228 7 10 7.44772 10 8C10 8.55228 9.55228 9 9 9H4.5C3.96064 9 3.52101 8.57299 3.50073 8.03859C3.49983 8.01771 3.49958 7.99677 3.5 7.9758V3.5C3.5 2.94772 3.94771 2.5 4.5 2.5Z" fill="currentColor"></path>
+        </svg>  
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-md copy-svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4C10.8954 4 10 4.89543 10 6H14C14 4.89543 13.1046 4 12 4ZM8.53513 4C9.22675 2.8044 10.5194 2 12 2C13.4806 2 14.7733 2.8044 15.4649 4H17C18.6569 4 20 5.34315 20 7V19C20 20.6569 18.6569 22 17 22H7C5.34315 22 4 20.6569 4 19V7C4 5.34315 5.34315 4 7 4H8.53513ZM8 6H7C6.44772 6 6 6.44772 6 7V19C6 19.5523 6.44772 20 7 20H17C17.5523 20 18 19.5523 18 19V7C18 6.44772 17.5523 6 17 6H16C16 7.10457 15.1046 8 14 8H10C8.89543 8 8 7.10457 8 6Z" fill="currentColor"></path>
+        </svg>
+      </div>
+
+     </div>
+   </div>              
+    `;
+
+
+
+  // Add click event for the copy-svg icon
+  box2.querySelector('.copy-svg').addEventListener('click', function () {
+    // const solutionText = box2.querySelector('#solution').textContent;
+    // Use the solutionText as needed, e.g., copy to clipboard
+    // console.log('Copying:', solutionText);
+
+
+    const solutionText = box2.querySelector('#solution' + solutionDivCount.toString()).textContent;
+
+    // Copy text to clipboard
+    navigator.clipboard.writeText(solutionText)
+      .then(() => {
+        console.log('Text copied to clipboard:', solutionText);
+        // You can add further handling or UI updates here if needed
+      })
+      .catch(err => {
+        console.error('Unable to copy text to clipboard:', err);
+        // Handle errors or show a message to the user
+      });
+
+
+  });
+
+  // Add click event for the api-svg icon
+  box2.querySelector('.api-svg').addEventListener('click', function () {
+    // Call your API here
+    console.log('Calling API');
+  });
+
+
+  // Append both instances to the container
+  container.appendChild(box1);
+  container.appendChild(box2);
+
+
   // }
 
-  // Prevent the default behavior (new line in contenteditable)    
+
+  // Get the existing element with id 'chatbox'
+  const chatbox = document.getElementById('chatbox_space');
+
+  // Insert the container above the 'chatbox' element
+  chatbox.parentNode.insertBefore(container, chatbox);
+
+  // await new Promise(resolve => setTimeout(resolve, 1000));
+  // Prevent the default behavior (new line in contenteditable)  
+
+  //////////////////////////////////////////////////////////////////////////////////
+  message = questionInput
+  // Send a request to the Flask server with the user's message
+  const response = await fetch("/api", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
+    body: JSON.stringify({ messages: [{ "sender_id": "user1", "conversation_id": "1", "prompt": message, "use_history": true }] }),
+
+  });
+
+  // Create a new TextDecoder to decode the streamed response text
+  const decoder = new TextDecoder();
+
+  // Set up a new ReadableStream to read the response body
+  const reader = response.body.getReader();
+  let chunks = "";
+
+  // Read the response stream as chunks and append them to the chat log
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks += decoder.decode(value);
+
+    chunks = chunks.replace('\n', '<br>');
+    // solution
+    const soln = document.getElementById("solution" + solutionDivCount.toString());
+    console.log("Element: solution" + solutionDivCount.toString());
+    soln.innerHTML = chunks;
+  }
+
+  markdownText = document.getElementById("solution" + solutionDivCount.toString()).innerText;
+  const htmlText = markdownToHtml(markdownText);
+  document.getElementById("solution" + solutionDivCount.toString()).innerHTML = htmlText;
+
 });
 
 
@@ -280,11 +384,6 @@ sendButton.addEventListener('click', function () {
       console.log(`"${elementToRemove}" not found in the array.`);
     }
 
-
-    // 4  - overview_template
-    // 5  - introduction
-    // 6  - problems
-    // 10  - executive_summary
 
     let string_input = "\n based on this text input, "
     // const searchStrings = ["overview_template", "introduction", "problems", "executive_summary"];
@@ -344,7 +443,7 @@ sendButton.addEventListener('click', function () {
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-          <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+          <img class="w-9 m-2" src="static/Images/user.png" alt="">
           <div id="question2"><span class="text-sm">"dd"</span></div>
         `;
 
@@ -354,9 +453,9 @@ sendButton.addEventListener('click', function () {
 
     box2.innerHTML = `
           <div class="box w-[35vw] flex justify-start space-x-6">
-            <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div class="w-9 h-9 m-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
             <div class="flex space-y-4 flex-col space-x-96 ">          
-              <div id="solution"><span class="text-sm">${allresults}</span></div>
+              <div id="solution" style="padding-right: 30px;"><span class="text-sm">${allresults}</span></div>
             </div>
           </div>
         `;
@@ -400,6 +499,43 @@ async function postData(url = "", data = {}) {
   }
 }
 
+function markdownToHtml(markdown) {
+  // Convert Markdown headings
+  markdown = markdown.replace(/^#\s*(.*)$/gm, '<h1>$1</h1>');
+  markdown = markdown.replace(/^##\s*(.*)$/gm, '<h2>$1</h2>');
+  markdown = markdown.replace(/^###\s*(.*)$/gm, '<h3>$1</h3>');
+  markdown = markdown.replace(/^####\s*(.*)$/gm, '<h4>$1</h4>');
+  markdown = markdown.replace(/^#####\s*(.*)$/gm, '<h5>$1</h5>');
+  markdown = markdown.replace(/^######\s*(.*)$/gm, '<h6>$1</h6>');
+
+  // Convert Markdown bold and italic
+  markdown = markdown.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  markdown = markdown.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+  // Convert Markdown code block
+  markdown = markdown.replace(/```(\w*)\s([\s\S]*?)```/g, '<pre><code class="$1">$2</code></pre>');
+
+  // Convert Markdown inline code
+  markdown = markdown.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // Convert Markdown horizontal rule
+  markdown = markdown.replace(/^\s*[-*_](\s*[-*_]){2,}\s*$/gm, '<hr>');
+
+  // Convert Markdown unordered list
+  markdown = markdown.replace(/^\s*[*+-]\s(.*)$/gm, '<li>$1</li>');
+  markdown = markdown.replace(/<\/li>\s*<li>/g, '</li><li>');
+  markdown = '<ul>' + markdown + '</ul>';
+
+  // Convert Markdown ordered list
+  markdown = markdown.replace(/^\s*\d+\.\s(.*)$/gm, '<li>$1</li>');
+  markdown = markdown.replace(/<\/li>\s*<li>/g, '</li><li>');
+  markdown = '<ol>' + markdown + '</ol>';
+
+  // Convert Markdown paragraph
+  markdown = markdown.replace(/^\s*(.*)$/gm, '<p>$1</p>');
+
+  return markdown;
+}
 
 const handleKeyDown = async (event) => {
 
@@ -410,7 +546,7 @@ const handleKeyDown = async (event) => {
   }
 
   if (event.key === 'Enter') {
-    console.log('Enter pressed');
+    console.log('Enter pressed!!!');
     questionInput = document.getElementById("questionInput").innerText;
     //console.log("Clicked sendButton!!!", questionInput)
 
@@ -430,51 +566,26 @@ const handleKeyDown = async (event) => {
       "use_history": true
     };
 
-    // Get the answer and populate it! 
-    //////////////////// let allresults = await postData("/api", params)
-
-    // Log allresults to understand its structure
-    //console.log("API Response:", allresults)
-    //console.dir(allresults)
 
 
-    // Parse the JSON string into a JavaScript object
-    // let responseObject = allresults
-
-    // console.log('responseObject:...', responseObject)
-
-    // Get an array of keys
-    // const keysArray = Object.keys(responseObject);
-
-    // Get an array of values
-    // const valuesArray = Object.values(responseObject);
-
-    // Output the arrays
-    //console.log('Keys:', keysArray);
-    //console.log('Values:', valuesArray);
 
 
     // Get the container element
     const container = document.getElementById('container');
 
-    // Loop through 'allresults' array and create instances dynamically    
-    // for (let key in responseObject) {
 
-    // //console.log(`Question: ${res.Human}, Answer: ${res.AI}`);
-    //console.log(`Question: ${key}, Answer: ${responseObject[key]}`);
-    // console.dir(responseObject)
     // Create the first instance
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     // box1.innerHTML = `
-    //   <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+    //   <img class="w-9 m-2" src="static/Images/user.png" alt="">
     //   <div class="flex space-y-4 flex-col">
     //     <div id="question_"><span class="text-sm"><b>You</b></span></div>
     //     <div id="question2"><span class="text-sm">${responseObject["Human"]}</span></div>
     //   </div>
     // `;
     box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <img class="w-9 m-2" src="static/Images/user.png" alt="">
       <div class="flex space-y-4 flex-col">
         <div id="question_"><span class="text-sm"><b>You</b></span></div>
         <div id="question2"><span class="text-sm">${questionInput}</span></div>
@@ -486,7 +597,7 @@ const handleKeyDown = async (event) => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     // box2.innerHTML = `
     //   <div class="box w-[35vw] flex justify-start space-x-6">
-    //     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+    //     <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
     //     <div class="flex space-y-4 flex-col">
     //       <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
     //       <div id="solution"><span class="text-sm">${responseObject["AI"]}</span></div>
@@ -495,10 +606,10 @@ const handleKeyDown = async (event) => {
     // `;
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+        <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-          <div id="solution"><span class="text-sm">Loading... </span></div>        
+          <div id="solution" style="padding-right: 30px;"><span class="text-sm">Loading... </span></div>        
         <br>
 
         <div class="svg-container flex">
@@ -590,6 +701,9 @@ const handleKeyDown = async (event) => {
       soln.innerHTML = chunks;
     }
 
+    markdownText = document.getElementById("solution").innerText;
+    const htmlText = markdownToHtml(markdownText);
+    document.getElementById("solution").innerHTML = htmlText;
 
     ///////////////////////////////////////////////////////////////////////////////////
 
@@ -665,7 +779,7 @@ const handleKeyDown2 = async (event) => {
     let box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-   <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+   <img class="w-9 m-2" src="static/Images/user.png" alt="">
    <div class="flex space-y-4 flex-col">
       <div id="question_"><span class="text-sm"><b>You</b></span></div>
       <div id="question2"><span class="text-sm">${questionInput}</span></div>
@@ -698,10 +812,10 @@ const handleKeyDown2 = async (event) => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
    <div class="box w-[35vw] flex justify-start space-x-6">
-     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+     <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
      <div class="flex space-y-4 flex-col">
        <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-       <div id=${"solution" + solutionDivCount.toString()}><span class="text-sm">Loading... </span></div>
+       <div id=${"solution" + solutionDivCount.toString()} style="padding-right: 30px;"><span class="text-sm">Loading... </span></div>
        <br>
 
       <div class="svg-container flex">
@@ -798,6 +912,10 @@ const handleKeyDown2 = async (event) => {
       soln.innerHTML = chunks;
     }
 
+    markdownText = document.getElementById("solution" + solutionDivCount.toString()).innerText;
+    const htmlText = markdownToHtml(markdownText);
+    document.getElementById("solution" + solutionDivCount.toString()).innerHTML = htmlText;
+
     ///////////////////////////////////////////////////////////////////////////////////
 
 
@@ -836,7 +954,7 @@ const handleKeyDown_letter = async (event) => {
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <img class="w-9 m-2" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${questionInput}</span></div>
     `;
 
@@ -847,7 +965,7 @@ const handleKeyDown_letter = async (event) => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+        <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
           <div id="${uniqueId}"><span class="text-sm">Loading... </span></div>
@@ -948,6 +1066,10 @@ const handleKeyDown_letter = async (event) => {
       const soln = document.getElementById(uniqueId);
       soln.innerHTML = chunks;
     }
+
+    markdownText = document.getElementById(uniqueId).innerText;
+    const htmlText = markdownToHtml(markdownText);
+    document.getElementById(uniqueId).innerHTML = htmlText;
 
     // Prevent the default behavior (new line in contenteditable)
     event.preventDefault();
@@ -1096,7 +1218,7 @@ const handleKeyDown_proposal = async (event) => {
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-        <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+        <img class="w-9 m-2" src="static/Images/user.png" alt="">
         <div id="question2"><span class="text-sm">"dd"</span></div>
       `;
 
@@ -1108,7 +1230,7 @@ const handleKeyDown_proposal = async (event) => {
     //   if (isFirstIteration) {
     //     box2.innerHTML = `
     //   <div class="box w-[35vw] flex justify-start space-x-6">
-    //     <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+    //     <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
     //     <div class="flex space-y-4 flex-col">
     //       <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
     //       <div id="solution"><span class="text-sm">${allresults}</span></div>
@@ -1119,9 +1241,9 @@ const handleKeyDown_proposal = async (event) => {
     //   } else {
     box2.innerHTML = `
         <div class="box w-[35vw] flex justify-start space-x-6">
-          <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+          <div class="w-9 h-9 m-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
           <div class="flex space-y-4 flex-col space-x-96 ">          
-            <div id="solution"><span class="text-sm"> </span></div>
+            <div id="solution" style="padding-right: 30px;"><span class="text-sm"> </span></div>
 
         <br>
         <div class="svg-container flex">
@@ -1229,7 +1351,9 @@ const handleKeyDown_proposal = async (event) => {
         // allresults = allresults + '<br><br>' + await postData("/proposal", params)
       }
 
-
+      markdownText = document.getElementById("solution").innerText;
+      const htmlText = markdownToHtml(markdownText);
+      document.getElementById("solution").innerHTML = htmlText;
 
       // Get an array of keys
       // const keysArray = Object.keys(responseObject);
@@ -1329,10 +1453,10 @@ const handleKeyDown_nda = async (event) => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
        <div class="box w-[35vw] flex justify-start space-x-6">
-         <img class="w-9 h-9 ml-4" src="static/Images/user.png" alt="">
+         <img class="w-9 h-9 m-2" src="static/Images/user.png" alt="">
          <div class="flex space-y-4 flex-col">
            <div id="question1"><span class="text-sm">You</span></div>
-           <div id="solution"><span class="text-sm">${questionInput}</span></div>
+           <div id="solution" style="padding-right: 30px;"><span class="text-sm">${questionInput}</span></div>
          </div>
        </div>
      `;
@@ -1366,8 +1490,8 @@ const handleKeyDown_nda = async (event) => {
       // document.getElementById('question2').innerText = allresults
       box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
       box1.innerHTML = `
-        <img class="w-9 ml-4" src="static/Images/cclbot.png" alt="">
-        <div id="solution_nda"><span class="text-sm">... </span></div>
+        <img class="w-9 m-2" src="static/Images/cclbot.png" alt="">
+        <div id="solution_nda" style="padding-right: 30px;"><span class="text-sm">... </span></div>
       `;
 
       // Append both instances to the container      
@@ -1400,7 +1524,7 @@ const handleKeyDown_nda = async (event) => {
 
       //   box2.innerHTML = `
       //   <div class="box w-[35vw] flex justify-start space-x-6">
-      //     <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+      //     <div class="w-9 h-9 m-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
       //     <div class="flex space-y-4 flex-col space-x-96 ">          
       //       <div id="solution"><span class="text-sm"> </span></div>
 
@@ -1434,10 +1558,14 @@ const handleKeyDown_nda = async (event) => {
         soln.innerHTML = chunks;
       }
 
+      markdownText = document.getElementById("solution_nda").innerText;
+      const htmlText = markdownToHtml(markdownText);
+      document.getElementById("solution_nda").innerHTML = htmlText;
+
     } else {
       box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
       box1.innerHTML = `
-        <img class="w-9 ml-4" src="static/Images/cclbot.png" alt="">
+        <img class="w-9 m-2" src="static/Images/cclbot.png" alt="">
         <div id="question2"><span class="text-sm">Q: ${nda_questions[nda_index]}</span></div>
       `;
     }
@@ -1487,7 +1615,7 @@ sendButton.addEventListener("click", async () => {
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <img class="w-9 m-2" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${res.question}</span></div>
     `;
 
@@ -1496,10 +1624,10 @@ sendButton.addEventListener("click", async () => {
     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
     box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+        <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm">CCL Bot</span></div>
-          <div id="solution"><span class="text-sm">${res.answer}</span></div>
+          <div id="solution" style="padding-right: 30px;"><span class="text-sm">${res.answer}</span></div>
         </div>
       </div>
     `;
@@ -1521,64 +1649,64 @@ sendButton.addEventListener("click", async () => {
 
 
 
-sendButton2.addEventListener("click", async () => {
-  //console.log("Clicked sendButton!!!")
-  questionInput = document.getElementById("questionInput2").value;
-  document.getElementById("questionInput2").value = "";
-  document.querySelector(".right2").style.display = "block"
-  document.querySelector(".right1").style.display = "none"
+// sendButton2.addEventListener("click", async () => {
+//   //console.log("Clicked sendButton!!!")
+//   questionInput = document.getElementById("questionInput2").value;
+//   document.getElementById("questionInput2").value = "";
+//   document.querySelector(".right2").style.display = "block"
+//   document.querySelector(".right1").style.display = "none"
 
-  document.querySelector(".right_letter").style.display = "none"
-  document.querySelector(".right_nda").style.display = "none"
-  document.querySelector(".right_proposal").style.display = "none"
+//   document.querySelector(".right_letter").style.display = "none"
+//   document.querySelector(".right_nda").style.display = "none"
+//   document.querySelector(".right_proposal").style.display = "none"
 
-  // Get the answer and populate it! 
-  let allresults = await postData("/api", { "question": questionInput })
+//   // Get the answer and populate it! 
+//   let allresults = await postData("/api", { "question": questionInput })
 
-  // Get the container element
-  const container = document.getElementById('container');
-
-
-  // Loop through 'allresults' array and create instances dynamically
-  allresults.forEach(res => {
-
-    //console.log(`Question: ${res.question}, Answer: ${res.answer}`);
-
-    // Create the first instance
-    const box1 = document.createElement('div');
-    box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
-    box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
-      <div id="question2"><span class="text-sm">${res.question}</span></div>
-    `;
-
-    // Create the second instance
-    const box2 = document.createElement('div');
-    box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
-    box2.innerHTML = `
-      <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
-        <div class="flex space-y-4 flex-col">
-          <div id="question1"><span class="text-sm">CCL Bot</span></div>
-          <div id="solution"><span class="text-sm">${res.answer}</span></div>
-        </div>
-      </div>
-    `;
-
-    // Append both instances to the container
-    container.appendChild(box1);
-    container.appendChild(box2);
-  });
+//   // Get the container element
+//   const container = document.getElementById('container');
 
 
-  // Get the existing element with id 'chatbox'
-  const chatbox = document.getElementById('chatbox');
+//   // Loop through 'allresults' array and create instances dynamically
+//   allresults.forEach(res => {
 
-  // Insert the container above the 'chatbox' element
-  chatbox.parentNode.insertBefore(container, chatbox);
+//     //console.log(`Question: ${res.question}, Answer: ${res.answer}`);
+
+//     // Create the first instance
+//     const box1 = document.createElement('div');
+//     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
+//     box1.innerHTML = `
+//       <img class="w-9 m-2" src="static/Images/user.png" alt="">
+//       <div id="question2"><span class="text-sm">${res.question}</span></div>
+//     `;
+
+//     // Create the second instance
+//     const box2 = document.createElement('div');
+//     box2.classList.add('box2', 'bg-gray-600', 'py-7', 'px-40', 'flex', 'justify-start', 'w-max', 'items-center');
+//     box2.innerHTML = `
+//       <div class="box w-[35vw] flex justify-start space-x-6">
+//         <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
+//         <div class="flex space-y-4 flex-col">
+//           <div id="question1"><span class="text-sm">CCL Bot</span></div>
+//           <div id="solution" style="padding-right: 30px;"><span class="text-sm">${res.answer}</span></div>
+//         </div>
+//       </div>
+//     `;
+
+//     // Append both instances to the container
+//     container.appendChild(box1);
+//     container.appendChild(box2);
+//   });
 
 
-})
+//   // Get the existing element with id 'chatbox'
+//   const chatbox = document.getElementById('chatbox');
+
+//   // Insert the container above the 'chatbox' element
+//   chatbox.parentNode.insertBefore(container, chatbox);
+
+
+// })
 
 
 
@@ -1596,7 +1724,7 @@ proposal.addEventListener("click", async (e) => {
   const box1 = document.createElement('div');
   box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
   box1.innerHTML = `
-     <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+     <img class="w-9 m-2" src="static/Images/user.png" alt="">
      <div id="question2"><span class="text-sm">Please enter a brief description of the proposal, highlighting the problems you want to solve, as well as the benefits of your solution.</span></div>
    `;
 
@@ -1637,7 +1765,7 @@ letter.addEventListener("click", async () => {
   const box1 = document.createElement('div');
   box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
   box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <img class="w-9 m-2" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">Please enter a brief description of the letter</span></div>
     `;
 
@@ -1674,7 +1802,7 @@ nda.addEventListener("click", async () => {
   const box1 = document.createElement('div');
   box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
   box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <img class="w-9 m-2" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm"> ${nda_questions[nda_index]}</span></div>
     `;
 
@@ -1813,7 +1941,7 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     const box1 = document.createElement('div');
     box1.classList.add('box1', 'm-auto', 'py-7', 'px-40', 'flex', 'justify-start', 'w-[35vw]', 'items-center', 'space-x-6');
     box1.innerHTML = `
-      <img class="w-9 ml-4" src="static/Images/user.png" alt="">
+      <img class="w-9 m-2" src="static/Images/user.png" alt="">
       <div id="question2"><span class="text-sm">${res.question}</span></div>
     `;
 
@@ -1825,10 +1953,10 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     if (isFirstIteration) {
       box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <img class="w-9 h-9 ml-4" src="static/Images/cclbot.png" alt="">
+        <img class="w-9 h-9 m-2" src="static/Images/cclbot.png" alt="">
         <div class="flex space-y-4 flex-col">
           <div id="question1"><span class="text-sm"><b>CCL Bot</b></span></div>
-          <div id="solution"><span class="text-sm">${res.answer}</span></div>
+          <div id="solution" style="padding-right: 30px;"><span class="text-sm">${res.answer}</span></div>
         </div>
       </div>
     `;
@@ -1836,9 +1964,9 @@ document.getElementById('nextButton').addEventListener("click", async (e) => {
     } else {
       box2.innerHTML = `
       <div class="box w-[35vw] flex justify-start space-x-6">
-        <div class="w-9 h-9 ml-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div class="w-9 h-9 m-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
         <div class="flex space-y-4 flex-col space-x-96 ">          
-          <div id="solution"><span class="text-sm">${res.answer}</span></div>
+          <div id="solution" style="padding-right: 30px;"><span class="text-sm">${res.answer}</span></div>
         </div>
       </div>
     `;
